@@ -1015,57 +1015,64 @@ var _unembedSwf = function() {
 };
 
 
-/**
+  /**
  * Map the data format names of the "clipData" to Flash-friendly names.
  *
  * @returns A new transformed object.
  * @private
  */
-var _mapClipDataToFlash = function(clipData) {
-  var newClipData = {},
-      formatMap = {};
-  if (!(typeof clipData === "object" && clipData)) {
-    return;
-  }
+  var _mapClipDataToFlash = function(clipData, fileData) {
+    var newClipData = {}, formatMap = {};
+    if (!(typeof clipData === "object" && clipData)) {
+      return;
+    }
+    if ((typeof fileData === "object" && fileData && fileData.filename)) {
+      newClipData.file = clipData[fileData.format]; 
+      newClipData.filename = fileData.filename; 
+      newClipData.b64 = fileData.b64; 
+      formatMap.file = fileData.format; 
+      return;
+    } else {
+      for (var dataFormat in clipData) {
+        if (dataFormat && _hasOwn.call(clipData, dataFormat) && typeof clipData[dataFormat] === "string" && clipData[dataFormat]) {
+          switch (dataFormat.toLowerCase()) {
+           case "text/plain":
+           case "text":
+           case "air:text":
+           case "flash:text":
+            newClipData.text = clipData[dataFormat];
+            formatMap.text = dataFormat;
+            break;
 
-  for (var dataFormat in clipData) {
-    if (dataFormat && _hasOwn.call(clipData, dataFormat) && typeof clipData[dataFormat] === "string" && clipData[dataFormat]) {
-      // Standardize the allowed clipboard segment names to reduce complexity on the Flash side
-      switch (dataFormat.toLowerCase()) {
-        case "text/plain":
-        case "text":
-        case "air:text":
-        case "flash:text":
-          newClipData.text = clipData[dataFormat];
-          formatMap.text = dataFormat;
-          break;
-        case "text/html":
-        case "html":
-        case "air:html":
-        case "flash:html":
-          newClipData.html = clipData[dataFormat];
-          formatMap.html = dataFormat;
-          break;
-        case "application/rtf":
-        case "text/rtf":
-        case "rtf":
-        case "richtext":
-        case "air:rtf":
-        case "flash:rtf":
-          newClipData.rtf = clipData[dataFormat];
-          formatMap.rtf = dataFormat;
-          break;
-        default:
-          // Just ignore it: the Flash clipboard cannot handle any other formats
-          break;
+           case "text/html":
+           case "html":
+           case "air:html":
+           case "flash:html":
+            newClipData.html = clipData[dataFormat];
+            formatMap.html = dataFormat;
+            break;
+
+           case "application/rtf":
+           case "text/rtf":
+           case "rtf":
+           case "richtext":
+           case "air:rtf":
+           case "flash:rtf":
+            newClipData.rtf = clipData[dataFormat];
+            formatMap.rtf = dataFormat;
+            break;
+
+           default:
+            break;
+          }
+        }
       }
     }
-  }
-  return {
-    data: newClipData,
-    formatMap: formatMap
+    return {
+      data: newClipData,
+      formatMap: formatMap
+    };
   };
-};
 
 
 /**
