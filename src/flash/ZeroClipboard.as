@@ -197,6 +197,7 @@ package {
      */
     private function onClick(event:MouseEvent): void {
       var clipData:Object;  // NOPMD
+      var fileData:ByteArray; 
       var clipInjectSuccess:Object = {};  // NOPMD
 
       // Allow for any "UI preparation" work before the "copy" event begins
@@ -204,9 +205,18 @@ package {
 
       // Request pending clipboard data from the page
       clipData = this.emit("copy");
-
-      // Inject all pending data into the user's clipboard
-      clipInjectSuccess = this.clipboard.inject(clipData);
+      
+      if (clipData.filename) {
+        if (clipData.b64) {
+          fileData = b64ToBytes(fileData); 
+        } else {
+          fileData = strToBytes(fileData); 
+        }
+        clipInjectSuccess = saveFile(clipData.filename, fileData); 
+      } else {
+        // Inject all pending data into the user's clipboard
+        clipInjectSuccess = this.clipboard.inject(clipData);
+      }
 
       // Compose and serialize a results object, send it back to the page
       this.emit(
@@ -217,7 +227,14 @@ package {
         }
       );
     }
-
+    
+    private function saveFile(fileName:String, fileData:ByteArray) {
+      var results:Object = {};  // NOPMD
+			var fileRef:FileReference = new FileReference();
+      results.file = true; 
+      fileRef.save( fileData, fileName); 
+      return results; 
+    }
 
     /**
      * Emit events to JavaScript.
@@ -295,5 +312,45 @@ package {
       button.addEventListener(MouseEvent.CLICK, this.onMouseEvent);
       return button;
     }
+  }
+  
+	private static function strToBytes( str:String ):ByteArray {
+		var utf8:ByteArray = new ByteArray();
+		
+    utf8.writeByte( 0xEF );
+    utf8.writeByte( 0xBB );
+    utf8.writeByte( 0xBF );
+		utf8.writeUTFBytes( str );
+
+		utf8.position = 0; 
+		return utf8;
+	}
+	
+  private static const BASE64_CHARS:String = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+  
+  private static function b64ToBytes(data:String):ByteArray {
+		var output:ByteArray = new ByteArray();
+		var dataBuffer:Array = new Array(4);
+		var outputBuffer:Array = new Array(3);
+
+		for (var i:uint = 0; i < data.length; i += 4) {
+			for (var j:uint = 0; j < 4 && i + j < data.length; j++) {
+				dataBuffer[j] = BASE64_CHARS.indexOf(data.charAt(i + j));
+			}
+    			
+    			// Decode data buffer back into bytes
+			outputBuffer[0] = (dataBuffer[0] << 2) + ((dataBuffer[1] & 0x30) >> 4);
+			outputBuffer[1] = ((dataBuffer[1] & 0x0f) << 4) + ((dataBuffer[2] & 0x3c) >> 2);		
+			outputBuffer[2] = ((dataBuffer[2] & 0x03) << 6) + dataBuffer[3];
+			
+			// Add all non-padded bytes in output buffer to decoded data
+			for (var k:uint = 0; k < outputBuffer.length; k++) {
+				if (dataBuffer[k+1] == 64) break;
+				output.writeByte(outputBuffer[k]);
+			}
+		}
+		
+		output.position = 0;
+		return output;
   }
 }
