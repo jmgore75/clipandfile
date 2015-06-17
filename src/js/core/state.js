@@ -50,6 +50,13 @@ var _clipData = {};
 
 
 /**
+ * Keep track of data for the pending file save transaction.
+ * @private
+ */
+var _fileData = {};
+
+
+/**
  * Keep track of data formats for the pending clipboard transaction.
  * @private
  */
