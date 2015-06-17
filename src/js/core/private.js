@@ -223,7 +223,7 @@ var _emit = function(event) {
 
   // For the `copy` event, be sure to return the `_clipData` to Flash to be injected into the clipboard
   if (event.type === "copy") {
-    tmp = _mapClipDataToFlash(_clipData);
+    tmp = _mapClipDataToFlash(_clipData, _fileData);
     returnVal = tmp.data;
     _clipDataFormatMap = tmp.formatMap;
   }
@@ -291,7 +291,7 @@ var _destroy = function() {
  * The underlying implementation of `ZeroClipboard.setData`.
  * @private
  */
-var _setData = function(format, data) {
+var _setData = function(format, data, filename, b64) {
   var dataObj;
 
   if (typeof format === "object" && format && typeof data === "undefined") {
@@ -303,6 +303,9 @@ var _setData = function(format, data) {
   else if (typeof format === "string" && format) {
     dataObj = {};
     dataObj[format] = data;
+    _fileData.format = format; 
+    _fileData.filename = filename; 
+    _fileData.b64 = !!b64; 
   }
   else {
     return;
@@ -328,6 +331,7 @@ var _clearData = function(format) {
   // If no format is passed, delete all of the pending data
   if (typeof format === "undefined") {
     _deleteOwnProperties(_clipData);
+    _deleteOwnProperties(_fileData);
     _clipDataFormatMap = null;
   }
   // Otherwise, delete only the pending data of the specified format
@@ -1485,8 +1489,8 @@ var _getDOMObjectPosition = function(obj) {
     }
     else {
       zoomFactor = _getZoomFactor();
-      pageXOffset = _Math.round(_document.documentElement.scrollLeft / zoomFactor);
-      pageYOffset = _Math.round(_document.documentElement.scrollTop / zoomFactor);
+      pageXOffset = _Math.round((_document.body.scrollLeft + _document.documentElement.scrollLeft) / zoomFactor);
+      pageYOffset = _Math.round((_document.body.scrollTop + _document.documentElement.scrollTop) / zoomFactor);
     }
 
     // `clientLeft`/`clientTop` are to fix IE's 2px offset in standards mode
