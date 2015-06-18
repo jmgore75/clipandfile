@@ -1,7 +1,7 @@
 /*!
  * ZeroClipboard
  * The ZeroClipboard library provides an easy way to copy text to the clipboard using an invisible Adobe Flash movie and a JavaScript interface.
- * Copyright (c) 2014 Jon Rohan, James M. Greene
+ * Copyright (c) 2015 Jon Rohan, James M. Greene
  * Licensed MIT
  * http://zeroclipboard.org/
  * v2.0.2
@@ -267,6 +267,11 @@
  */
   var _clipData = {};
   /**
+ * Keep track of data for the pending file save transaction.
+ * @private
+ */
+  var _fileData = {};
+  /**
  * Keep track of data formats for the pending clipboard transaction.
  * @private
  */
@@ -518,7 +523,7 @@
     eventCopy = _extend({}, event);
     _dispatchCallbacks.call(this, eventCopy);
     if (event.type === "copy") {
-      tmp = _mapClipDataToFlash(_clipData);
+      tmp = _mapClipDataToFlash(_clipData, _fileData);
       returnVal = tmp.data;
       _clipDataFormatMap = tmp.formatMap;
     }
@@ -566,7 +571,7 @@
  * The underlying implementation of `ZeroClipboard.setData`.
  * @private
  */
-  var _setData = function(format, data) {
+  var _setData = function(format, data, filename, b64) {
     var dataObj;
     if (typeof format === "object" && format && typeof data === "undefined") {
       dataObj = format;
@@ -574,6 +579,9 @@
     } else if (typeof format === "string" && format) {
       dataObj = {};
       dataObj[format] = data;
+      _fileData.format = format;
+      _fileData.filename = filename;
+      _fileData.b64 = !!b64;
     } else {
       return;
     }
@@ -590,6 +598,7 @@
   var _clearData = function(format) {
     if (typeof format === "undefined") {
       _deleteOwnProperties(_clipData);
+      _deleteOwnProperties(_fileData);
       _clipDataFormatMap = null;
     } else if (typeof format === "string" && _hasOwn.call(_clipData, format)) {
       delete _clipData[format];
@@ -1087,42 +1096,50 @@
  * @returns A new transformed object.
  * @private
  */
-  var _mapClipDataToFlash = function(clipData) {
+  var _mapClipDataToFlash = function(clipData, fileData) {
     var newClipData = {}, formatMap = {};
     if (!(typeof clipData === "object" && clipData)) {
       return;
     }
-    for (var dataFormat in clipData) {
-      if (dataFormat && _hasOwn.call(clipData, dataFormat) && typeof clipData[dataFormat] === "string" && clipData[dataFormat]) {
-        switch (dataFormat.toLowerCase()) {
-         case "text/plain":
-         case "text":
-         case "air:text":
-         case "flash:text":
-          newClipData.text = clipData[dataFormat];
-          formatMap.text = dataFormat;
-          break;
+    if (typeof fileData === "object" && fileData && fileData.filename) {
+      newClipData.file = clipData[fileData.format];
+      newClipData.filename = fileData.filename;
+      newClipData.b64 = fileData.b64;
+      formatMap.file = fileData.format;
+      return;
+    } else {
+      for (var dataFormat in clipData) {
+        if (dataFormat && _hasOwn.call(clipData, dataFormat) && typeof clipData[dataFormat] === "string" && clipData[dataFormat]) {
+          switch (dataFormat.toLowerCase()) {
+           case "text/plain":
+           case "text":
+           case "air:text":
+           case "flash:text":
+            newClipData.text = clipData[dataFormat];
+            formatMap.text = dataFormat;
+            break;
 
-         case "text/html":
-         case "html":
-         case "air:html":
-         case "flash:html":
-          newClipData.html = clipData[dataFormat];
-          formatMap.html = dataFormat;
-          break;
+           case "text/html":
+           case "html":
+           case "air:html":
+           case "flash:html":
+            newClipData.html = clipData[dataFormat];
+            formatMap.html = dataFormat;
+            break;
 
-         case "application/rtf":
-         case "text/rtf":
-         case "rtf":
-         case "richtext":
-         case "air:rtf":
-         case "flash:rtf":
-          newClipData.rtf = clipData[dataFormat];
-          formatMap.rtf = dataFormat;
-          break;
+           case "application/rtf":
+           case "text/rtf":
+           case "rtf":
+           case "richtext":
+           case "air:rtf":
+           case "flash:rtf":
+            newClipData.rtf = clipData[dataFormat];
+            formatMap.rtf = dataFormat;
+            break;
 
-         default:
-          break;
+           default:
+            break;
+          }
         }
       }
     }
@@ -1458,8 +1475,8 @@
         pageYOffset = _window.pageYOffset;
       } else {
         zoomFactor = _getZoomFactor();
-        pageXOffset = _Math.round(_document.documentElement.scrollLeft / zoomFactor);
-        pageYOffset = _Math.round(_document.documentElement.scrollTop / zoomFactor);
+        pageXOffset = _Math.round((_document.body.scrollLeft + _document.documentElement.scrollLeft) / zoomFactor);
+        pageYOffset = _Math.round((_document.body.scrollTop + _document.documentElement.scrollTop) / zoomFactor);
       }
       var leftBorderWidth = _document.documentElement.clientLeft || 0;
       var topBorderWidth = _document.documentElement.clientTop || 0;
@@ -1988,7 +2005,11 @@
             if (_globalConfig.autoActivate === true) {
               _removeMouseHandlers(elements[i]);
             }
-            delete elements[i].zcClippingId;
+            try {
+              delete elements[i].zcClippingId;
+            } catch (e) {
+              elements[i].zcClippingId = undefined;
+            }
           }
         }
       }

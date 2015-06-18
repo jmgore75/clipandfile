@@ -251,7 +251,11 @@ var _clientUnclip = function(elements) {
           if (_globalConfig.autoActivate === true) {
             _removeMouseHandlers(elements[i]);
           }
-          elements[i].zcClippingId = undefined;
+          try {
+            delete elements[i].zcClippingId; 
+          } catch (e) {
+            elements[i].zcClippingId = undefined;
+          }
         }
       }
     }
