@@ -66,6 +66,10 @@
     "spm": "^3.0.0"
   },
   "main": "./dist/ClipAndFile.js",
+  "bowermain": [
+    "./dist/ClipAndFile.js", 
+    "./dist/ClipAndFile.swf"
+  ],
   "component": {
     "scripts": {
       "clipandfile": "./dist/ClipAndFile.js"

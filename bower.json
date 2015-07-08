@@ -2,7 +2,7 @@
   "name": "clipandfile",
   "description": "The ClipAndFile library provides an easy way to copy text to the clipboard or save a file using an invisible Adobe Flash movie and a JavaScript interface.",
   "version": "0.1.0",
-  "main": ["./dist/ClipAndFile.js", "./dist/ClipAndFile.swf"],
+  "main": ["./dist/ClipAndFile.js","./dist/ClipAndFile.swf"],
   "keywords": ["flash","clipboard","copy","cut","paste","zclip","clip","clippy"],
   "license": "https://github.com/jmgore75/clipandfile/blob/master/LICENSE",
   "authors": [{"name":"Jon Rohan","url":"http://jonrohan.me/"},{"name":"James M. Greene","email":"james.m.greene@gmail.com","url":"http://jamesgreene.net/"},{"name":"Jeremy Gore","email":"jmgore75@gmail.com"}],
