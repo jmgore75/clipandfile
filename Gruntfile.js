@@ -35,7 +35,7 @@ module.exports = function(grunt) {
       }
     },
     clean: {
-      dist: ["ZeroClipboard.*", "dist/ZeroClipboard.*"],
+      dist: ["ClipAndFile.*", "dist/ClipAndFile.*"],
       flash: {
         options: {
           // Force is required when trying to clean outside of the project dir
@@ -63,7 +63,7 @@ module.exports = function(grunt) {
           "src/js/core/api.js",
           "src/js/end.js"
         ],
-        dest: "dist/ZeroClipboard.Core.js"
+        dest: "dist/ClipAndFile.Core.js"
       },
       client: {
         src: [
@@ -79,16 +79,16 @@ module.exports = function(grunt) {
           "src/js/client/api.js",
           "src/js/end.js"
         ],
-        dest: "dist/ZeroClipboard.js"
+        dest: "dist/ClipAndFile.js"
       },
       flash: {
         files: [
           {
             src: [
               "src/meta/source-banner.tmpl",
-              "src/flash/ZeroClipboard.as"
+              "src/flash/ClipAndFile.as"
             ],
-            dest: path.join(flashTmpDir, "ZeroClipboard.as")
+            dest: path.join(flashTmpDir, "ClipAndFile.as")
           },
           {
             src: [
@@ -160,11 +160,11 @@ module.exports = function(grunt) {
         files: [
           {
             src: ["<%= concat.core.dest %>"],
-            dest: "dist/ZeroClipboard.Core.min.js"
+            dest: "dist/ClipAndFile.Core.min.js"
           },
           {
             src: ["<%= concat.client.dest %>"],
-            dest: "dist/ZeroClipboard.min.js"
+            dest: "dist/ClipAndFile.min.js"
           }
         ]
       }
@@ -175,7 +175,7 @@ module.exports = function(grunt) {
       },
       swf: {
         files: {
-          "dist/ZeroClipboard.swf": ["<%= concat.flash.files[0].dest %>"]
+          "dist/ClipAndFile.swf": ["<%= concat.flash.files[0].dest %>"]
         }
       }
     },
@@ -203,7 +203,7 @@ module.exports = function(grunt) {
       options: {
         mode: "444"
       },
-      dist: ["dist/ZeroClipboard.*"],
+      dist: ["dist/ClipAndFile.*"],
       meta: ["bower.json", "composer.json", "LICENSE"]
     },
     connect: {
@@ -220,8 +220,8 @@ module.exports = function(grunt) {
         "test/core/api.tests.js.html",
         "test/client/private.tests.js.html",
         "test/client/api.tests.js.html",
-        "test/built/ZeroClipboard.Core.tests.js.html",
-        "test/built/ZeroClipboard.tests.js.html"
+        "test/built/ClipAndFile.Core.tests.js.html",
+        "test/built/ClipAndFile.tests.js.html"
         //"test/**/*.tests.js.html"
       ],
       http: {
@@ -233,8 +233,8 @@ module.exports = function(grunt) {
               "test/core/api.tests.js.html",
               "test/client/private.tests.js.html",
               "test/client/api.tests.js.html",
-              "test/built/ZeroClipboard.Core.tests.js.html",
-              "test/built/ZeroClipboard.tests.js.html"
+              "test/built/ClipAndFile.Core.tests.js.html",
+              "test/built/ClipAndFile.tests.js.html"
               //"test/**/*.tests.js.html"
             ]).map(function(testPage) {
               return "http://localhost:" + localPort + "/" + testPage + "?noglobals=true";

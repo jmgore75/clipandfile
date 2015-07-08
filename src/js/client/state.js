@@ -1,5 +1,5 @@
 /**
- * Keep track of the ZeroClipboard client instance counter.
+ * Keep track of the ClipAndFile client instance counter.
  */
 var _clientIdCounter = 0;
 
@@ -18,7 +18,7 @@ var _clientMeta = {};
 
 
 /**
- * Keep track of the ZeroClipboard clipped elements counter.
+ * Keep track of the ClipAndFile clipped elements counter.
  */
 var _elementIdCounter = 0;
 
@@ -27,7 +27,7 @@ var _elementIdCounter = 0;
  * Keep track of the state of the clipped element relationships to clients.
  *
  * Entry structure:
- *   _elementMeta[element.zcClippingId] = [client1.id, client2.id];
+ *   _elementMeta[element.cafClippingId] = [client1.id, client2.id];
  */
 var _elementMeta = {};
 
@@ -36,7 +36,7 @@ var _elementMeta = {};
  * Keep track of the state of the mouse event handlers for clipped elements.
  *
  * Entry structure:
- *   _mouseHandlers[element.zcClippingId] = {
+ *   _mouseHandlers[element.cafClippingId] = {
  *     mouseover: function(event) {},
  *     mouseout:  function(event) {},
  *     mousedown: function(event) {},
@@ -47,12 +47,12 @@ var _mouseHandlers = {};
 
 
 /**
- * Extending the ZeroClipboard configuration defaults for the Client module.
+ * Extending the ClipAndFile configuration defaults for the Client module.
  */
 _extend(_globalConfig, {
 
   // Setting this to `false` would allow users to handle calling
-  // `ZeroClipboard.activate(...);` themselves instead of relying on our
+  // `ClipAndFile.activate(...);` themselves instead of relying on our
   // per-element `mouseover` handler.
   autoActivate: true
 

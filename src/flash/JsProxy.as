@@ -84,9 +84,9 @@ package {
      * available (hosted in the browser AND supporting bidirectional communication).
      *
      * @example
-     * var jsProxy:JsProxy = new JsProxy("global-zeroclipboard-flash-bridge");
-     * var result:Object = jsProxy.call("ZeroClipboard.emit", [{ type: "copy" }]);
-     * jsProxy.call("(function(eventObj) { return ZeroClipboard.emit(eventObj); })", [{ type: "ready"}]);
+     * var jsProxy:JsProxy = new JsProxy("global-clipandfile-flash-bridge");
+     * var result:Object = jsProxy.call("ClipAndFile.emit", [{ type: "copy" }]);
+     * jsProxy.call("(function(eventObj) { return ClipAndFile.emit(eventObj); })", [{ type: "ready"}]);
      *
      * @return `undefined`, or anything
      */

@@ -1,8 +1,8 @@
 {
-  "name": "zeroclipboard",
-  "title": "ZeroClipboard",
-  "version": "2.0.2",
-  "description": "The ZeroClipboard library provides an easy way to copy text to the clipboard using an invisible Adobe Flash movie and a JavaScript interface.",
+  "name": "clipandfile",
+  "title": "ClipAndFile",
+  "version": "0.1.0",
+  "description": "The ClipAndFile library provides an easy way to copy text to the clipboard or save a file using an invisible Adobe Flash movie and a JavaScript interface.",
   "keywords": [
     "flash",
     "clipboard",
@@ -13,11 +13,11 @@
     "clip",
     "clippy"
   ],
-  "homepage": "http://zeroclipboard.org/",
+  "homepage": "https://github.com/jmgore75/clipandfile",
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/zeroclipboard/zeroclipboard/blob/master/LICENSE"
+      "url": "https://github.com/jmgore75/clipandfile/blob/master/LICENSE"
     }
   ],
   "contributors": [
@@ -29,14 +29,18 @@
       "name": "James M. Greene",
       "email": "james.m.greene@gmail.com",
       "url": "http://jamesgreene.net/"
+    },
+    {
+      "name": "Jeremy Gore",
+      "email": "jmgore75@gmail.com"
     }
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/zeroclipboard/zeroclipboard.git"
+    "url": "https://github.com/jmgore75/clipandfile.git"
   },
   "bugs": {
-    "url": "https://github.com/zeroclipboard/zeroclipboard/issues"
+    "url": "https://github.com/jmgore75/clipandfile/issues"
   },
   "dependencies": {
     "send": "0"
@@ -61,17 +65,17 @@
     "qunitjs": "^1.14.0",
     "spm": "^3.0.0"
   },
-  "main": "./dist/ZeroClipboard.js",
+  "main": "./dist/ClipAndFile.js",
   "component": {
     "scripts": {
-      "zeroclipboard": "./dist/ZeroClipboard.js"
+      "clipandfile": "./dist/ClipAndFile.js"
     }
   },
   "spm": {
-    "main": "ZeroClipboard.js",
+    "main": "ClipAndFile.js",
     "output": [
-      "ZeroClipboard.swf",
-      "ZeroClipboard.Core.js"
+      "ClipAndFile.swf",
+      "ClipAndFile.Core.js"
     ]
   },
   "scripts": {

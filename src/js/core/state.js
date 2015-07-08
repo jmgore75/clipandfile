@@ -21,7 +21,7 @@ var _flashState = {
 
 
 /**
- * The minimum Flash Player version required to use ZeroClipboard completely.
+ * The minimum Flash Player version required to use ClipAndFile completely.
  * @readonly
  * @private
  */
@@ -71,7 +71,7 @@ var _eventMessages = {
   "ready": "Flash communication is established",
   "error": {
     "flash-disabled": "Flash is disabled or not installed",
-    "flash-outdated": "Flash is too outdated to support ZeroClipboard",
+    "flash-outdated": "Flash is too outdated to support ClipAndFile",
     "flash-unavailable": "Flash is unable to communicate bidirectionally with JavaScript",
     "flash-deactivated": "Flash is too outdated for your browser and/or is configured as click-to-activate",
     "flash-overdue": "Flash communication was established but NOT within the acceptable time limit"
@@ -80,13 +80,13 @@ var _eventMessages = {
 
 
 /**
- * The presumed location of the "ZeroClipboard.swf" file, based on the location
- * of the executing JavaScript file (e.g. "ZeroClipboard.js", etc.).
+ * The presumed location of the "ClipAndFile.swf" file, based on the location
+ * of the executing JavaScript file (e.g. "ClipAndFile.js", etc.).
  * @private
  */
 var _swfPath = (function() {
   var i, jsDir, tmpJsPath, jsPath,
-      swfPath = "ZeroClipboard.swf";
+      swfPath = "ClipAndFile.swf";
   // Try to leverage the `currentScript` feature
   if (!(_document.currentScript && (jsPath = _document.currentScript.src))) {
     // If it it not available, then seek the script out instead...
@@ -137,13 +137,13 @@ var _swfPath = (function() {
 
 
 /**
- * ZeroClipboard configuration defaults for the Core module.
+ * ClipAndFile configuration defaults for the Core module.
  * @private
  */
 var _globalConfig = {
 
-  // SWF URL, relative to the page. Default value will be "ZeroClipboard.swf"
-  // under the same path as the ZeroClipboard JS file.
+  // SWF URL, relative to the page. Default value will be "ClipAndFile.swf"
+  // under the same path as the ClipAndFile JS file.
   swfPath: _swfPath,
 
   // SWF inbound scripting policy: page domains that the SWF should trust.
@@ -162,7 +162,7 @@ var _globalConfig = {
   // how long it takes to load the SWF, you can set this to `null`.
   flashLoadTimeout: 30000,
 
-  // Setting this to `false` would allow users to handle calling `ZeroClipboard.activate(...);`
+  // Setting this to `false` would allow users to handle calling `ClipAndFile.activate(...);`
   // themselves instead of relying on our per-element `mouseover` handler.
   autoActivate: true,
 
@@ -171,20 +171,20 @@ var _globalConfig = {
   
   // Sets the ID of the `div` encapsulating the Flash object.
   // Value is validated against the HTML4 spec for `ID` tokens.
-  containerId: "global-zeroclipboard-html-bridge",
+  containerId: "global-clipandfile-html-bridge",
  
   // Sets the class of the `div` encapsulating the Flash object.
-  containerClass: "global-zeroclipboard-container",
+  containerClass: "global-clipandfile-container",
  
   // Sets the ID and name of the Flash `object` element.
   // Value is validated against the HTML4 spec for `ID` and `Name` tokens.
-  swfObjectId: "global-zeroclipboard-flash-bridge",
+  swfObjectId: "global-clipandfile-flash-bridge",
 
   // The class used to indicate that a clipped element is being hovered over.
-  hoverClass: "zeroclipboard-is-hover",
+  hoverClass: "clipandfile-is-hover",
 
   // The class used to indicate that a clipped element is active (is being clicked).
-  activeClass: "zeroclipboard-is-active",
+  activeClass: "clipandfile-is-active",
 
 
 

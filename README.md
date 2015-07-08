@@ -1,11 +1,10 @@
 # WARNING
-**This `master` branch contains the v2.x codebase for ZeroClipboard, which is currently in an unstable state! If you
-want to see the v1.x codebase, please see the [`1.x-master`](https://github.com/zeroclipboard/zeroclipboard/tree/1.x-master) branch instead.**
+**This `ieCompatibility` branch contains a modified version of the v2.0.2 codebase for ZeroClipboard.  It is primarily intended to support IE in compatibility view, with additional features.  Please see [`ZeroClipboard`](https://github.com/zeroclipboard/zeroclipboard) for the original.**
 
 
-# ZeroClipboard
+# ClipAndFile
 
-The ZeroClipboard library provides an easy way to copy text to the clipboard using an invisible [Adobe Flash](http://en.wikipedia.org/wiki/Adobe_Flash) movie and a [JavaScript](http://en.wikipedia.org/wiki/JavaScript) interface. The "Zero" signifies that the library is invisible and the user interface is left entirely up to you. 
+The ClipAndFile library provides an easy way to copy text to the clipboard or save a file using an invisible [Adobe Flash](http://en.wikipedia.org/wiki/Adobe_Flash) movie and a [JavaScript](http://en.wikipedia.org/wiki/JavaScript) interface. The the user interface is left entirely up to you. 
 
 This is achieved by automatically floating the invisible movie on top of a [DOM](http://en.wikipedia.org/wiki/Document_Object_Model) element of your choice. Standard mouse events are even propagated out to your DOM element, so you can still have rollover and mousedown effects.
 
@@ -21,7 +20,8 @@ Note that, due to browser and Flash security restrictions, this clipboard inject
 <html>
   <body>
     <button id="copy-button" data-clipboard-text="Copy Me!" title="Click to copy me.">Copy to Clipboard</button>
-    <script src="ZeroClipboard.js"></script>
+    <button id="save-button" data-clipboard-text="Save Me!" data-clipboard-file="Save.txt" title="Click to save me.">Save to File</button>
+    <script src="ClipAndFile.js"></script>
     <script src="main.js"></script>
   </body>
 </html>
@@ -29,29 +29,35 @@ Note that, due to browser and Flash security restrictions, this clipboard inject
 
 ```js
 // main.js
-var client = new ZeroClipboard( document.getElementById("copy-button") );
+var copy_client = new ClipAndFile( document.getElementById("copy-button") );
 
-client.on( "ready", function( readyEvent ) {
-  // alert( "ZeroClipboard SWF is ready!" );
+copy_client.on( "ready", function( readyEvent ) {
+  // alert( "ClipAndFile SWF is ready!" );
 
-  client.on( "aftercopy", function( event ) {
-    // `this` === `client`
+  copy_client.on( "aftercopy", function( event ) {
+    // `this` === `copy_client`
     // `event.target` === the element that was clicked
     event.target.style.display = "none";
     alert("Copied text to clipboard: " + event.data["text/plain"] );
   } );
 } );
+
+var save_client = new ClipAndFile( document.getElementById("copy-button") );
+
+save_client.on( "ready", function( readyEvent ) {
+  // alert( "ClipAndFile SWF is ready!" );
+
+  save_client.on( "aftercopy", function( event ) {
+    // `this` === `save_client`
+    // `event.target` === the element that was clicked
+    event.target.style.display = "none";
+    alert("Saved text to file: " + event.data.file );
+  } );
+} );
 ```
 
 See [docs/instructions.md](docs/instructions.md) for more advanced options in using the library on your site.
-See [docs/api/ZeroClipboard.md](docs/api/ZeroClipboard.md) for the complete API documentation.
-
-Here is a working [test page](http://zeroclipboard.org/#demo) where you can try out ZeroClipboard in your browser.
-
-
-## Testing ZeroClipboard Locally
-
-To test the page [demo page](http://zeroclipboard.org/#demo) locally, clone the [website repo](https://github.com/zeroclipboard/zeroclipboard.org).
+See [docs/api/ClipAndFile.md](docs/api/ClipAndFile.md) for the complete API documentation.
 
 
 ## Support
@@ -76,16 +82,5 @@ see [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Releases
 
-Starting with version [1.1.7](https://github.com/zeroclipboard/zeroclipboard/releases/tag/v1.1.7), ZeroClipboard uses [semantic versioning](http://semver.org/).
+see [releases](https://github.com/jmgore75/clipandfile/releases)
 
-see [releases](https://github.com/zeroclipboard/zeroclipboard/releases)
-
-
-## Roadmap
-
-see [roadmap.md](docs/roadmap.md)
-
-
-## Last Build
-
-[![Build Status](https://secure.travis-ci.org/zeroclipboard/zeroclipboard.png?branch=master)](https://travis-ci.org/zeroclipboard/zeroclipboard)

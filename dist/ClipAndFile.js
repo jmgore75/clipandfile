@@ -1,10 +1,10 @@
 /*!
- * ZeroClipboard
- * The ZeroClipboard library provides an easy way to copy text to the clipboard using an invisible Adobe Flash movie and a JavaScript interface.
- * Copyright (c) 2015 Jon Rohan, James M. Greene
+ * ClipAndFile
+ * The ClipAndFile library provides an easy way to copy text to the clipboard or save a file using an invisible Adobe Flash movie and a JavaScript interface.
+ * Copyright (c) 2015 Jon Rohan, James M. Greene, Jeremy Gore
  * Licensed MIT
- * http://zeroclipboard.org/
- * v2.0.2
+ * https://github.com/jmgore75/clipandfile
+ * v0.1.0
  */
 (function(window, undefined) {
   "use strict";
@@ -246,7 +246,7 @@
     ready: null
   };
   /**
- * The minimum Flash Player version required to use ZeroClipboard completely.
+ * The minimum Flash Player version required to use ClipAndFile completely.
  * @readonly
  * @private
  */
@@ -284,19 +284,19 @@
     ready: "Flash communication is established",
     error: {
       "flash-disabled": "Flash is disabled or not installed",
-      "flash-outdated": "Flash is too outdated to support ZeroClipboard",
+      "flash-outdated": "Flash is too outdated to support ClipAndFile",
       "flash-unavailable": "Flash is unable to communicate bidirectionally with JavaScript",
       "flash-deactivated": "Flash is too outdated for your browser and/or is configured as click-to-activate",
       "flash-overdue": "Flash communication was established but NOT within the acceptable time limit"
     }
   };
   /**
- * The presumed location of the "ZeroClipboard.swf" file, based on the location
- * of the executing JavaScript file (e.g. "ZeroClipboard.js", etc.).
+ * The presumed location of the "ClipAndFile.swf" file, based on the location
+ * of the executing JavaScript file (e.g. "ClipAndFile.js", etc.).
  * @private
  */
   var _swfPath = function() {
-    var i, jsDir, tmpJsPath, jsPath, swfPath = "ZeroClipboard.swf";
+    var i, jsDir, tmpJsPath, jsPath, swfPath = "ClipAndFile.swf";
     if (!(_document.currentScript && (jsPath = _document.currentScript.src))) {
       var scripts = _document.getElementsByTagName("script");
       if ("readyState" in scripts[0]) {
@@ -335,7 +335,7 @@
     return swfPath;
   }();
   /**
- * ZeroClipboard configuration defaults for the Core module.
+ * ClipAndFile configuration defaults for the Core module.
  * @private
  */
   var _globalConfig = {
@@ -346,17 +346,17 @@
     flashLoadTimeout: 3e4,
     autoActivate: true,
     bubbleEvents: true,
-    containerId: "global-zeroclipboard-html-bridge",
-    containerClass: "global-zeroclipboard-container",
-    swfObjectId: "global-zeroclipboard-flash-bridge",
-    hoverClass: "zeroclipboard-is-hover",
-    activeClass: "zeroclipboard-is-active",
+    containerId: "global-clipandfile-html-bridge",
+    containerClass: "global-clipandfile-container",
+    swfObjectId: "global-clipandfile-flash-bridge",
+    hoverClass: "clipandfile-is-hover",
+    activeClass: "clipandfile-is-active",
     forceHandCursor: false,
     title: null,
     zIndex: 999999999
   };
   /**
- * The underlying implementation of `ZeroClipboard.config`.
+ * The underlying implementation of `ClipAndFile.config`.
  * @private
  */
   var _config = function(options) {
@@ -388,28 +388,28 @@
     return _deepCopy(_globalConfig);
   };
   /**
- * The underlying implementation of `ZeroClipboard.state`.
+ * The underlying implementation of `ClipAndFile.state`.
  * @private
  */
   var _state = function() {
     return {
       browser: _pick(_navigator, [ "userAgent", "platform", "appName" ]),
       flash: _omit(_flashState, [ "bridge" ]),
-      zeroclipboard: {
-        version: ZeroClipboard.version,
-        config: ZeroClipboard.config()
+      clipandfile: {
+        version: ClipAndFile.version,
+        config: ClipAndFile.config()
       }
     };
   };
   /**
- * The underlying implementation of `ZeroClipboard.isFlashUnusable`.
+ * The underlying implementation of `ClipAndFile.isFlashUnusable`.
  * @private
  */
   var _isFlashUnusable = function() {
     return !!(_flashState.disabled || _flashState.outdated || _flashState.unavailable || _flashState.deactivated);
   };
   /**
- * The underlying implementation of `ZeroClipboard.on`.
+ * The underlying implementation of `ClipAndFile.on`.
  * @private
  */
   var _on = function(eventType, listener) {
@@ -419,7 +419,7 @@
     } else if (typeof eventType === "object" && eventType && typeof listener === "undefined") {
       for (i in eventType) {
         if (_hasOwn.call(eventType, i) && typeof i === "string" && i && typeof eventType[i] === "function") {
-          ZeroClipboard.on(i, eventType[i]);
+          ClipAndFile.on(i, eventType[i]);
         }
       }
     }
@@ -433,7 +433,7 @@
         _handlers[eventType].push(listener);
       }
       if (added.ready && _flashState.ready) {
-        ZeroClipboard.emit({
+        ClipAndFile.emit({
           type: "ready"
         });
       }
@@ -441,7 +441,7 @@
         var errorTypes = [ "disabled", "outdated", "unavailable", "deactivated", "overdue" ];
         for (i = 0, len = errorTypes.length; i < len; i++) {
           if (_flashState[errorTypes[i]] === true) {
-            ZeroClipboard.emit({
+            ClipAndFile.emit({
               type: "error",
               name: "flash-" + errorTypes[i]
             });
@@ -450,10 +450,10 @@
         }
       }
     }
-    return ZeroClipboard;
+    return ClipAndFile;
   };
   /**
- * The underlying implementation of `ZeroClipboard.off`.
+ * The underlying implementation of `ClipAndFile.off`.
  * @private
  */
   var _off = function(eventType, listener) {
@@ -465,7 +465,7 @@
     } else if (typeof eventType === "object" && eventType && typeof listener === "undefined") {
       for (i in eventType) {
         if (_hasOwn.call(eventType, i) && typeof i === "string" && i && typeof eventType[i] === "function") {
-          ZeroClipboard.off(i, eventType[i]);
+          ClipAndFile.off(i, eventType[i]);
         }
       }
     }
@@ -486,10 +486,10 @@
         }
       }
     }
-    return ZeroClipboard;
+    return ClipAndFile;
   };
   /**
- * The underlying implementation of `ZeroClipboard.handlers`.
+ * The underlying implementation of `ClipAndFile.handlers`.
  * @private
  */
   var _listeners = function(eventType) {
@@ -502,7 +502,7 @@
     return copy;
   };
   /**
- * The underlying implementation of `ZeroClipboard.emit`.
+ * The underlying implementation of `ClipAndFile.emit`.
  * @private
  */
   var _emit = function(event) {
@@ -515,7 +515,7 @@
       return;
     }
     if (event.type === "ready" && _flashState.overdue === true) {
-      return ZeroClipboard.emit({
+      return ClipAndFile.emit({
         type: "error",
         name: "flash-overdue"
       });
@@ -530,14 +530,14 @@
     return returnVal;
   };
   /**
- * The underlying implementation of `ZeroClipboard.create`.
+ * The underlying implementation of `ClipAndFile.create`.
  * @private
  */
   var _create = function() {
     if (typeof _flashState.ready !== "boolean") {
       _flashState.ready = false;
     }
-    if (!ZeroClipboard.isFlashUnusable() && _flashState.bridge === null) {
+    if (!ClipAndFile.isFlashUnusable() && _flashState.bridge === null) {
       var maxWait = _globalConfig.flashLoadTimeout;
       if (typeof maxWait === "number" && maxWait >= 0) {
         _setTimeout(function() {
@@ -545,7 +545,7 @@
             _flashState.deactivated = true;
           }
           if (_flashState.deactivated === true) {
-            ZeroClipboard.emit({
+            ClipAndFile.emit({
               type: "error",
               name: "flash-deactivated"
             });
@@ -557,31 +557,29 @@
     }
   };
   /**
- * The underlying implementation of `ZeroClipboard.destroy`.
+ * The underlying implementation of `ClipAndFile.destroy`.
  * @private
  */
   var _destroy = function() {
-    ZeroClipboard.clearData();
-    ZeroClipboard.deactivate();
-    ZeroClipboard.emit("destroy");
+    ClipAndFile.clearData();
+    ClipAndFile.deactivate();
+    ClipAndFile.emit("destroy");
     _unembedSwf();
-    ZeroClipboard.off();
+    ClipAndFile.off();
   };
   /**
- * The underlying implementation of `ZeroClipboard.setData`.
+ * The underlying implementation of `ClipAndFile.setData`.
  * @private
  */
-  var _setData = function(format, data, filename, b64) {
+  var _setData = function(format, data) {
     var dataObj;
     if (typeof format === "object" && format && typeof data === "undefined") {
       dataObj = format;
-      ZeroClipboard.clearData();
+      ClipAndFile.clearData();
     } else if (typeof format === "string" && format) {
+      _deleteOwnProperties(_fileData);
       dataObj = {};
       dataObj[format] = data;
-      _fileData.format = format;
-      _fileData.filename = filename;
-      _fileData.b64 = !!b64;
     } else {
       return;
     }
@@ -592,7 +590,21 @@
     }
   };
   /**
- * The underlying implementation of `ZeroClipboard.clearData`.
+ * The underlying implementation of `ClipAndFile.setFile`.
+ * @private
+ */
+  var _setFile = function(filename, data, b64) {
+    b64 = !!b64;
+    data = data || "";
+    if (typeof data === "string" && typeof filename === "string" && filename) {
+      ClipAndFile.clearData();
+      _fileData.filename = filename;
+      _fileData.file = data;
+      _fileData.b64 = b64;
+    }
+  };
+  /**
+ * The underlying implementation of `ClipAndFile.clearData`.
  * @private
  */
   var _clearData = function(format) {
@@ -605,7 +617,7 @@
     }
   };
   /**
- * The underlying implementation of `ZeroClipboard.activate`.
+ * The underlying implementation of `ClipAndFile.activate`.
  * @private
  */
   var _activate = function(element) {
@@ -632,7 +644,7 @@
     _reposition();
   };
   /**
- * The underlying implementation of `ZeroClipboard.deactivate`.
+ * The underlying implementation of `ClipAndFile.deactivate`.
  * @private
  */
   var _deactivate = function() {
@@ -707,8 +719,9 @@
     }
     if (event.type === "copy") {
       event.clipboardData = {
-        setData: ZeroClipboard.setData,
-        clearData: ZeroClipboard.clearData
+        setData: ClipAndFile.setData,
+        setFile: ClipAndFile.setFile,
+        clearData: ClipAndFile.clearData
       };
     }
     if (event.type === "aftercopy") {
@@ -833,6 +846,29 @@
     }
     return this;
   };
+  var _preprocessCopyEvent = function(event) {
+    var textContent, htmlContent, filename, targetEl = event.relatedTarget;
+    if (event.target && (filename = event.target.getAttribute("data-clipboard-file"))) {
+      if (targetEl && (textContent = targetEl.value || targetEl.textContent || targetEl.innerText)) {
+        event.clipboardData.setFile(filename, textContent);
+      } else if (textContent = event.target.getAttribute("data-clipboard-text")) {
+        event.clipboardData.setFile(filename, textContent);
+      } else if (textContent = event.target.getAttribute("data-clipboard-b64")) {
+        event.clipboardData.setFile(filename, textContent, true);
+      }
+    } else {
+      if (!(_clipData["text/html"] || _clipData["text/plain"]) && targetEl && (htmlContent = targetEl.value || targetEl.outerHTML || targetEl.innerHTML) && (textContent = targetEl.value || targetEl.textContent || targetEl.innerText)) {
+        event.clipboardData.clearData();
+        event.clipboardData.setData("text/plain", textContent);
+        if (htmlContent !== textContent) {
+          event.clipboardData.setData("text/html", htmlContent);
+        }
+      } else if (!_clipData["text/plain"] && event.target && (textContent = event.target.getAttribute("data-clipboard-text"))) {
+        event.clipboardData.clearData();
+        event.clipboardData.setData("text/plain", textContent);
+      }
+    }
+  };
   /**
  * Preprocess any special behaviors, reactions, or state changes after receiving this event.
  * Executes only once per event emitted, NOT once per client.
@@ -869,28 +905,18 @@
       break;
 
      case "copy":
-      var textContent, htmlContent, targetEl = event.relatedTarget;
-      if (!(_clipData["text/html"] || _clipData["text/plain"]) && targetEl && (htmlContent = targetEl.value || targetEl.outerHTML || targetEl.innerHTML) && (textContent = targetEl.value || targetEl.textContent || targetEl.innerText)) {
-        event.clipboardData.clearData();
-        event.clipboardData.setData("text/plain", textContent);
-        if (htmlContent !== textContent) {
-          event.clipboardData.setData("text/html", htmlContent);
-        }
-      } else if (!_clipData["text/plain"] && event.target && (textContent = event.target.getAttribute("data-clipboard-text"))) {
-        event.clipboardData.clearData();
-        event.clipboardData.setData("text/plain", textContent);
-      }
+      _preprocessCopyEvent(event);
       break;
 
      case "aftercopy":
-      ZeroClipboard.clearData();
+      ClipAndFile.clearData();
       if (element && element !== _safeActiveElement() && element.focus) {
         element.focus();
       }
       break;
 
      case "_mouseover":
-      ZeroClipboard.activate(element);
+      ClipAndFile.activate(element);
       if (_globalConfig.bubbleEvents === true && sourceIsSwf) {
         if (element && element !== event.relatedTarget && !_containedBy(event.relatedTarget, element)) {
           _fireMouseEvent(_extend({}, event, {
@@ -906,7 +932,7 @@
       break;
 
      case "_mouseout":
-      ZeroClipboard.deactivate();
+      ClipAndFile.deactivate();
       if (_globalConfig.bubbleEvents === true && sourceIsSwf) {
         if (element && element !== event.relatedTarget && !_containedBy(event.relatedTarget, element)) {
           _fireMouseEvent(_extend({}, event, {
@@ -1033,7 +1059,7 @@
       tmpDiv.innerHTML = '<object id="' + _globalConfig.swfObjectId + '" name="' + _globalConfig.swfObjectId + '" ' + 'width="100%" height="100%" ' + (oldIE ? 'classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"' : 'type="application/x-shockwave-flash" data="' + swfUrl + '"') + ">" + (oldIE ? '<param name="movie" value="' + swfUrl + '"/>' : "") + '<param name="allowScriptAccess" value="' + allowScriptAccess + '"/>' + '<param name="allowNetworking" value="' + allowNetworking + '"/>' + '<param name="menu" value="false"/>' + '<param name="wmode" value="transparent"/>' + '<param name="flashvars" value="' + flashvars + '"/>' + "</object>";
       flashBridge = tmpDiv.firstChild;
       tmpDiv = null;
-      flashBridge.ZeroClipboard = ZeroClipboard;
+      flashBridge.ClipAndFile = ClipAndFile;
       container.replaceChild(flashBridge, divToBeReplaced);
     }
     if (!flashBridge) {
@@ -1102,11 +1128,10 @@
       return;
     }
     if (typeof fileData === "object" && fileData && fileData.filename) {
-      newClipData.file = clipData[fileData.format];
+      newClipData.file = fileData.file;
       newClipData.filename = fileData.filename;
       newClipData.b64 = fileData.b64;
-      formatMap.file = fileData.format;
-      return;
+      formatMap.file = "file";
     } else {
       for (var dataFormat in clipData) {
         if (dataFormat && _hasOwn.call(clipData, dataFormat) && typeof clipData[dataFormat] === "string" && clipData[dataFormat]) {
@@ -1621,44 +1646,44 @@
  */
   _detectFlashSupport(_ActiveXObject);
   /**
- * A shell constructor for `ZeroClipboard` client instances.
+ * A shell constructor for `ClipAndFile` client instances.
  *
  * @constructor
  */
-  var ZeroClipboard = function() {
-    if (!(this instanceof ZeroClipboard)) {
-      return new ZeroClipboard();
+  var ClipAndFile = function() {
+    if (!(this instanceof ClipAndFile)) {
+      return new ClipAndFile();
     }
-    if (typeof ZeroClipboard._createClient === "function") {
-      ZeroClipboard._createClient.apply(this, _args(arguments));
+    if (typeof ClipAndFile._createClient === "function") {
+      ClipAndFile._createClient.apply(this, _args(arguments));
     }
   };
   /**
- * The ZeroClipboard library's version number.
+ * The ClipAndFile library's version number.
  *
  * @static
  * @readonly
  * @property {string}
  */
-  ZeroClipboard.version = "2.0.2";
-  _makeReadOnly(ZeroClipboard, "version");
+  ClipAndFile.version = "0.1.0";
+  _makeReadOnly(ClipAndFile, "version");
   /**
- * Update or get a copy of the ZeroClipboard global configuration.
+ * Update or get a copy of the ClipAndFile global configuration.
  * Returns a copy of the current/updated configuration.
  *
  * @returns Object
  * @static
  */
-  ZeroClipboard.config = function() {
+  ClipAndFile.config = function() {
     return _config.apply(this, _args(arguments));
   };
   /**
- * Diagnostic method that describes the state of the browser, Flash Player, and ZeroClipboard.
+ * Diagnostic method that describes the state of the browser, Flash Player, and ClipAndFile.
  *
  * @returns Object
  * @static
  */
-  ZeroClipboard.state = function() {
+  ClipAndFile.state = function() {
     return _state.apply(this, _args(arguments));
   };
   /**
@@ -1667,16 +1692,16 @@
  * @returns Boolean
  * @static
  */
-  ZeroClipboard.isFlashUnusable = function() {
+  ClipAndFile.isFlashUnusable = function() {
     return _isFlashUnusable.apply(this, _args(arguments));
   };
   /**
  * Register an event listener.
  *
- * @returns `ZeroClipboard`
+ * @returns `ClipAndFile`
  * @static
  */
-  ZeroClipboard.on = function() {
+  ClipAndFile.on = function() {
     return _on.apply(this, _args(arguments));
   };
   /**
@@ -1684,10 +1709,10 @@
  * If no `listener` function/object is provided, it will unregister all listeners for the provided `eventType`.
  * If no `eventType` is provided, it will unregister all listeners for every event type.
  *
- * @returns `ZeroClipboard`
+ * @returns `ClipAndFile`
  * @static
  */
-  ZeroClipboard.off = function() {
+  ClipAndFile.off = function() {
     return _off.apply(this, _args(arguments));
   };
   /**
@@ -1696,7 +1721,7 @@
  *
  * @returns array of listeners for the `eventType`; if no `eventType`, then a map/hash object of listeners for all event types; or `null`
  */
-  ZeroClipboard.handlers = function() {
+  ClipAndFile.handlers = function() {
     return _listeners.apply(this, _args(arguments));
   };
   /**
@@ -1705,7 +1730,7 @@
  * @returns For the "copy" event, returns the Flash-friendly "clipData" object; otherwise `undefined`.
  * @static
  */
-  ZeroClipboard.emit = function() {
+  ClipAndFile.emit = function() {
     return _emit.apply(this, _args(arguments));
   };
   /**
@@ -1714,7 +1739,7 @@
  * @returns The Flash object
  * @static
  */
-  ZeroClipboard.create = function() {
+  ClipAndFile.create = function() {
     return _create.apply(this, _args(arguments));
   };
   /**
@@ -1723,7 +1748,7 @@
  * @returns `undefined`
  * @static
  */
-  ZeroClipboard.destroy = function() {
+  ClipAndFile.destroy = function() {
     return _destroy.apply(this, _args(arguments));
   };
   /**
@@ -1732,8 +1757,16 @@
  * @returns `undefined`
  * @static
  */
-  ZeroClipboard.setData = function() {
+  ClipAndFile.setData = function() {
     return _setData.apply(this, _args(arguments));
+  };
+  /**
+ * Stores the pending data to save as a file.  Call only once.
+ *
+ * @returns `this`
+ */
+  ClipAndFile.prototype.setFile = function() {
+    return _setFile.apply(this, _args(arguments));
   };
   /**
  * Clear the pending data for clipboard injection.
@@ -1742,34 +1775,34 @@
  * @returns `undefined`
  * @static
  */
-  ZeroClipboard.clearData = function() {
+  ClipAndFile.clearData = function() {
     return _clearData.apply(this, _args(arguments));
   };
   /**
  * Sets the current HTML object that the Flash object should overlay. This will put the global
  * Flash object on top of the current element; depending on the setup, this may also set the
  * pending clipboard text data as well as the Flash object's wrapping element's title attribute
- * based on the underlying HTML element and ZeroClipboard configuration.
+ * based on the underlying HTML element and ClipAndFile configuration.
  *
  * @returns `undefined`
  * @static
  */
-  ZeroClipboard.activate = function() {
+  ClipAndFile.activate = function() {
     return _activate.apply(this, _args(arguments));
   };
   /**
  * Un-overlays the Flash object. This will put the global Flash object off-screen; depending on
  * the setup, this may also unset the Flash object's wrapping element's title attribute based on
- * the underlying HTML element and ZeroClipboard configuration.
+ * the underlying HTML element and ClipAndFile configuration.
  *
  * @returns `undefined`
  * @static
  */
-  ZeroClipboard.deactivate = function() {
+  ClipAndFile.deactivate = function() {
     return _deactivate.apply(this, _args(arguments));
   };
   /**
- * Keep track of the ZeroClipboard client instance counter.
+ * Keep track of the ClipAndFile client instance counter.
  */
   var _clientIdCounter = 0;
   /**
@@ -1784,21 +1817,21 @@
  */
   var _clientMeta = {};
   /**
- * Keep track of the ZeroClipboard clipped elements counter.
+ * Keep track of the ClipAndFile clipped elements counter.
  */
   var _elementIdCounter = 0;
   /**
  * Keep track of the state of the clipped element relationships to clients.
  *
  * Entry structure:
- *   _elementMeta[element.zcClippingId] = [client1.id, client2.id];
+ *   _elementMeta[element.cafClippingId] = [client1.id, client2.id];
  */
   var _elementMeta = {};
   /**
  * Keep track of the state of the mouse event handlers for clipped elements.
  *
  * Entry structure:
- *   _mouseHandlers[element.zcClippingId] = {
+ *   _mouseHandlers[element.cafClippingId] = {
  *     mouseover: function(event) {},
  *     mouseout:  function(event) {},
  *     mousedown: function(event) {},
@@ -1807,13 +1840,13 @@
  */
   var _mouseHandlers = {};
   /**
- * Extending the ZeroClipboard configuration defaults for the Client module.
+ * Extending the ClipAndFile configuration defaults for the Client module.
  */
   _extend(_globalConfig, {
     autoActivate: true
   });
   /**
- * The real constructor for `ZeroClipboard` client instances.
+ * The real constructor for `ClipAndFile` client instances.
  * @private
  */
   var _clientConstructor = function(elements) {
@@ -1827,16 +1860,16 @@
     if (elements) {
       client.clip(elements);
     }
-    ZeroClipboard.on("*", function(event) {
+    ClipAndFile.on("*", function(event) {
       return client.emit(event);
     });
-    ZeroClipboard.on("destroy", function() {
+    ClipAndFile.on("destroy", function() {
       client.destroy();
     });
-    ZeroClipboard.create();
+    ClipAndFile.create();
   };
   /**
- * The underlying implementation of `ZeroClipboard.Client.prototype.on`.
+ * The underlying implementation of `ClipAndFile.Client.prototype.on`.
  * @private
  */
   var _clientOn = function(eventType, listener) {
@@ -1882,7 +1915,7 @@
     return this;
   };
   /**
- * The underlying implementation of `ZeroClipboard.Client.prototype.off`.
+ * The underlying implementation of `ClipAndFile.Client.prototype.off`.
  * @private
  */
   var _clientOff = function(eventType, listener) {
@@ -1918,7 +1951,7 @@
     return this;
   };
   /**
- * The underlying implementation of `ZeroClipboard.Client.prototype.handlers`.
+ * The underlying implementation of `ClipAndFile.Client.prototype.handlers`.
  * @private
  */
   var _clientListeners = function(eventType) {
@@ -1933,7 +1966,7 @@
     return copy;
   };
   /**
- * The underlying implementation of `ZeroClipboard.Client.prototype.emit`.
+ * The underlying implementation of `ClipAndFile.Client.prototype.emit`.
  * @private
  */
   var _clientEmit = function(event) {
@@ -1949,21 +1982,21 @@
     return this;
   };
   /**
- * The underlying implementation of `ZeroClipboard.Client.prototype.clip`.
+ * The underlying implementation of `ClipAndFile.Client.prototype.clip`.
  * @private
  */
   var _clientClip = function(elements) {
     elements = _prepClip(elements);
     for (var i = 0; i < elements.length; i++) {
       if (_hasOwn.call(elements, i) && elements[i] && elements[i].nodeType === 1) {
-        if (!elements[i].zcClippingId) {
-          elements[i].zcClippingId = "zcClippingId_" + _elementIdCounter++;
-          _elementMeta[elements[i].zcClippingId] = [ this.id ];
+        if (!elements[i].cafClippingId) {
+          elements[i].cafClippingId = "cafClippingId_" + _elementIdCounter++;
+          _elementMeta[elements[i].cafClippingId] = [ this.id ];
           if (_globalConfig.autoActivate === true) {
             _addMouseHandlers(elements[i]);
           }
-        } else if (_inArray(this.id, _elementMeta[elements[i].zcClippingId]) === -1) {
-          _elementMeta[elements[i].zcClippingId].push(this.id);
+        } else if (_inArray(this.id, _elementMeta[elements[i].cafClippingId]) === -1) {
+          _elementMeta[elements[i].cafClippingId].push(this.id);
         }
         var clippedElements = _clientMeta[this.id] && _clientMeta[this.id].elements;
         if (_inArray(elements[i], clippedElements) === -1) {
@@ -1974,7 +2007,7 @@
     return this;
   };
   /**
- * The underlying implementation of `ZeroClipboard.Client.prototype.unclip`.
+ * The underlying implementation of `ClipAndFile.Client.prototype.unclip`.
  * @private
  */
   var _clientUnclip = function(elements) {
@@ -1995,7 +2028,7 @@
         while ((arrayIndex = _inArray(elements[i], clippedElements, arrayIndex)) !== -1) {
           clippedElements.splice(arrayIndex, 1);
         }
-        var clientIds = _elementMeta[elements[i].zcClippingId];
+        var clientIds = _elementMeta[elements[i].cafClippingId];
         if (clientIds) {
           arrayIndex = 0;
           while ((arrayIndex = _inArray(this.id, clientIds, arrayIndex)) !== -1) {
@@ -2006,9 +2039,9 @@
               _removeMouseHandlers(elements[i]);
             }
             try {
-              delete elements[i].zcClippingId;
+              delete elements[i].cafClippingId;
             } catch (e) {
-              elements[i].zcClippingId = undefined;
+              elements[i].cafClippingId = undefined;
             }
           }
         }
@@ -2017,7 +2050,7 @@
     return this;
   };
   /**
- * The underlying implementation of `ZeroClipboard.Client.prototype.elements`.
+ * The underlying implementation of `ClipAndFile.Client.prototype.elements`.
  * @private
  */
   var _clientElements = function() {
@@ -2025,7 +2058,7 @@
     return meta && meta.elements ? meta.elements.slice(0) : [];
   };
   /**
- * The underlying implementation of `ZeroClipboard.Client.prototype.destroy`.
+ * The underlying implementation of `ClipAndFile.Client.prototype.destroy`.
  * @private
  */
   var _clientDestroy = function() {
@@ -2148,10 +2181,10 @@
       if (!(event || _window.event)) {
         return;
       }
-      ZeroClipboard.activate(element);
+      ClipAndFile.activate(element);
     };
     _addEventHandler(element, "mouseover", _elementMouseOver);
-    _mouseHandlers[element.zcClippingId] = {
+    _mouseHandlers[element.cafClippingId] = {
       mouseover: _elementMouseOver
     };
   };
@@ -2165,22 +2198,22 @@
     if (!(element && element.nodeType === 1)) {
       return;
     }
-    var mouseHandlers = _mouseHandlers[element.zcClippingId];
+    var mouseHandlers = _mouseHandlers[element.cafClippingId];
     if (!(typeof mouseHandlers === "object" && mouseHandlers)) {
       return;
     }
     if (typeof mouseHandlers.mouseover === "function") {
       _removeEventHandler(element, "mouseover", mouseHandlers.mouseover);
     }
-    delete _mouseHandlers[element.zcClippingId];
+    delete _mouseHandlers[element.cafClippingId];
   };
   /**
- * Creates a new ZeroClipboard client instance.
+ * Creates a new ClipAndFile client instance.
  * Optionally, auto-`clip` an element or collection of elements.
  *
  * @constructor
  */
-  ZeroClipboard._createClient = function() {
+  ClipAndFile._createClient = function() {
     _clientConstructor.apply(this, _args(arguments));
   };
   /**
@@ -2188,7 +2221,7 @@
  *
  * @returns `this`
  */
-  ZeroClipboard.prototype.on = function() {
+  ClipAndFile.prototype.on = function() {
     return _clientOn.apply(this, _args(arguments));
   };
   /**
@@ -2198,7 +2231,7 @@
  *
  * @returns `this`
  */
-  ZeroClipboard.prototype.off = function() {
+  ClipAndFile.prototype.off = function() {
     return _clientOff.apply(this, _args(arguments));
   };
   /**
@@ -2207,7 +2240,7 @@
  *
  * @returns array of listeners for the `eventType`; if no `eventType`, then a map/hash object of listeners for all event types; or `null`
  */
-  ZeroClipboard.prototype.handlers = function() {
+  ClipAndFile.prototype.handlers = function() {
     return _clientListeners.apply(this, _args(arguments));
   };
   /**
@@ -2215,7 +2248,7 @@
  *
  * @returns For the "copy" event, returns the Flash-friendly "clipData" object; otherwise `undefined`.
  */
-  ZeroClipboard.prototype.emit = function() {
+  ClipAndFile.prototype.emit = function() {
     return _clientEmit.apply(this, _args(arguments));
   };
   /**
@@ -2223,7 +2256,7 @@
  *
  * @returns `this`
  */
-  ZeroClipboard.prototype.clip = function() {
+  ClipAndFile.prototype.clip = function() {
     return _clientClip.apply(this, _args(arguments));
   };
   /**
@@ -2232,7 +2265,7 @@
  *
  * @returns `this`
  */
-  ZeroClipboard.prototype.unclip = function() {
+  ClipAndFile.prototype.unclip = function() {
     return _clientUnclip.apply(this, _args(arguments));
   };
   /**
@@ -2240,7 +2273,7 @@
  *
  * @returns array of clipped elements
  */
-  ZeroClipboard.prototype.elements = function() {
+  ClipAndFile.prototype.elements = function() {
     return _clientElements.apply(this, _args(arguments));
   };
   /**
@@ -2249,7 +2282,7 @@
  *
  * @returns `undefined`
  */
-  ZeroClipboard.prototype.destroy = function() {
+  ClipAndFile.prototype.destroy = function() {
     return _clientDestroy.apply(this, _args(arguments));
   };
   /**
@@ -2257,8 +2290,8 @@
  *
  * @returns `this`
  */
-  ZeroClipboard.prototype.setText = function(text) {
-    ZeroClipboard.setData("text/plain", text);
+  ClipAndFile.prototype.setText = function(text) {
+    ClipAndFile.setData("text/plain", text);
     return this;
   };
   /**
@@ -2266,8 +2299,8 @@
  *
  * @returns `this`
  */
-  ZeroClipboard.prototype.setHtml = function(html) {
-    ZeroClipboard.setData("text/html", html);
+  ClipAndFile.prototype.setHtml = function(html) {
+    ClipAndFile.setData("text/html", html);
     return this;
   };
   /**
@@ -2275,8 +2308,8 @@
  *
  * @returns `this`
  */
-  ZeroClipboard.prototype.setRichText = function(richText) {
-    ZeroClipboard.setData("application/rtf", richText);
+  ClipAndFile.prototype.setRichText = function(richText) {
+    ClipAndFile.setData("application/rtf", richText);
     return this;
   };
   /**
@@ -2284,8 +2317,17 @@
  *
  * @returns `this`
  */
-  ZeroClipboard.prototype.setData = function() {
-    ZeroClipboard.setData.apply(this, _args(arguments));
+  ClipAndFile.prototype.setData = function() {
+    ClipAndFile.setData.apply(this, _args(arguments));
+    return this;
+  };
+  /**
+ * Stores the pending data to save as a file.  Call only once.
+ *
+ * @returns `this`
+ */
+  ClipAndFile.prototype.setFile = function() {
+    ClipAndFile.setFile.apply(this, _args(arguments));
     return this;
   };
   /**
@@ -2294,18 +2336,18 @@
  *
  * @returns `this`
  */
-  ZeroClipboard.prototype.clearData = function() {
-    ZeroClipboard.clearData.apply(this, _args(arguments));
+  ClipAndFile.prototype.clearData = function() {
+    ClipAndFile.clearData.apply(this, _args(arguments));
     return this;
   };
   if (typeof define === "function" && define.amd) {
     define(function() {
-      return ZeroClipboard;
+      return ClipAndFile;
     });
   } else if (typeof module === "object" && module && typeof module.exports === "object" && module.exports) {
-    module.exports = ZeroClipboard;
+    module.exports = ClipAndFile;
   } else {
-    window.ZeroClipboard = ZeroClipboard;
+    window.ClipAndFile = ClipAndFile;
   }
 })(function() {
   return this;

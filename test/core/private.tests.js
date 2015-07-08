@@ -189,11 +189,11 @@
     var inputToExpectedMap = {
       "": null,
       " ": null,
-      "ZeroClipboard.swf": null,
-      "js/ZeroClipboard.swf": null,
-      "/js/ZeroClipboard.swf": null,
-      "/zeroclipboard/zeroclipboard/": null,
-      "zeroclipboard/zeroclipboard/": null,
+      "ClipAndFile.swf": null,
+      "js/ClipAndFile.swf": null,
+      "/js/ClipAndFile.swf": null,
+      "/clipandfile/clipandfile/": null,
+      "clipandfile/clipandfile/": null,
       "*": "*",
       "github.com": "github.com",
       "http://github.com": "github.com",
@@ -223,7 +223,7 @@
     var i, len, tmp;
     var currentDomain = window.location.host || "localhost";
     var _globalConfig = {
-      swfPath: "ZeroClipboard.swf",
+      swfPath: "ClipAndFile.swf",
       trustedDomains: [currentDomain]
     };
     var inputToExpectedMap = [
@@ -234,10 +234,10 @@
       { args: [currentDomain, _extend({}, _globalConfig, { trustedDomains: [currentDomain, "otherDomain.com"] })], result: "always" },
       { args: [currentDomain, _extend({}, _globalConfig, { trustedDomains: ["otherDomain.com"] })], result: "never" },
       // Cross-domain SWF
-      { args: [currentDomain, _extend({}, _globalConfig, { swfPath: "//otherDomain.com/ZeroClipboard.swf" })], result: "always" },
-      { args: [currentDomain, _extend({}, _globalConfig, { swfPath: "//otherDomain.com/ZeroClipboard.swf", trustedDomains: [] })], result: "never" },
-      { args: [currentDomain, _extend({}, _globalConfig, { swfPath: "//otherDomain.com/ZeroClipboard.swf", trustedDomains: ["*"] })], result: "always" },
-      { args: [currentDomain, _extend({}, _globalConfig, { swfPath: "//otherDomain.com/ZeroClipboard.swf", trustedDomains: [currentDomain, "otherDomain.com"] })], result: "always" }
+      { args: [currentDomain, _extend({}, _globalConfig, { swfPath: "//otherDomain.com/ClipAndFile.swf" })], result: "always" },
+      { args: [currentDomain, _extend({}, _globalConfig, { swfPath: "//otherDomain.com/ClipAndFile.swf", trustedDomains: [] })], result: "never" },
+      { args: [currentDomain, _extend({}, _globalConfig, { swfPath: "//otherDomain.com/ClipAndFile.swf", trustedDomains: ["*"] })], result: "always" },
+      { args: [currentDomain, _extend({}, _globalConfig, { swfPath: "//otherDomain.com/ClipAndFile.swf", trustedDomains: [currentDomain, "otherDomain.com"] })], result: "always" }
     ];
 
     // Act & Assert

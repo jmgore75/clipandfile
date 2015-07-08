@@ -1,4 +1,4 @@
-/*global ZeroClipboard */
+/*global ClipAndFile */
 
 (function(module, test) {
   "use strict";
@@ -8,27 +8,27 @@
   // Helper functions
   var TestUtils = {
     getHtmlBridge: function() {
-      return document.getElementById(ZeroClipboard.config("containerId"));
+      return document.getElementById(ClipAndFile.config("containerId"));
     }
   };
 
 
-  module("ZeroClipboard.js (built) unit tests - Core", {
+  module("ClipAndFile.js (built) unit tests - Core", {
     setup: function() {
       // Store
-      originalConfig = ZeroClipboard.config();
-      originalFlashDetect = ZeroClipboard.isFlashUnusable;
+      originalConfig = ClipAndFile.config();
+      originalFlashDetect = ClipAndFile.isFlashUnusable;
       // Modify
-      ZeroClipboard.isFlashUnusable = function() {
+      ClipAndFile.isFlashUnusable = function() {
         return false;
       };
-      ZeroClipboard.config({ swfPath: originalConfig.swfPath.replace(/\/(?:src|test)\/.*$/i, "/dist/ZeroClipboard.swf") });
+      ClipAndFile.config({ swfPath: originalConfig.swfPath.replace(/\/(?:src|test)\/.*$/i, "/dist/ClipAndFile.swf") });
     },
     teardown: function() {
       // Restore
-      ZeroClipboard.destroy();
-      ZeroClipboard.config(originalConfig);
-      ZeroClipboard.isFlashUnusable = originalFlashDetect;
+      ClipAndFile.destroy();
+      ClipAndFile.config(originalConfig);
+      ClipAndFile.isFlashUnusable = originalFlashDetect;
     }
   });
 
@@ -41,11 +41,11 @@
     var indexOfTest = window.location.pathname.toLowerCase().indexOf("/test/");
     var rootDir = window.location.pathname.slice(1, indexOfTest + 1);
     var rootPath = rootOrigin + rootDir;
-    //var zcJsUrl = rootPath + "dist/ZeroClipboard.js";
-    var swfPathBasedOnZeroClipboardJsPath = rootPath + "dist/ZeroClipboard.swf";
+    //var cafJsUrl = rootPath + "dist/ClipAndFile.js";
+    var swfPathBasedOnClipAndFileJsPath = rootPath + "dist/ClipAndFile.swf";
 
     // Test that the client has the expected default URL [even if it's not correct]
-    assert.strictEqual(ZeroClipboard.config("swfPath"), swfPathBasedOnZeroClipboardJsPath);
+    assert.strictEqual(ClipAndFile.config("swfPath"), swfPathBasedOnClipAndFileJsPath);
   });
 
 
@@ -53,42 +53,42 @@
     assert.expect(3);
 
     // Arrange
-    ZeroClipboard.isFlashUnusable = function() {
+    ClipAndFile.isFlashUnusable = function() {
       return false;
     };
 
     // Assert, arrange, assert, act, assert
     assert.equal(TestUtils.getHtmlBridge(), null, "The bridge does not exist before creating a client");
     /*jshint nonew:false */
-    new ZeroClipboard();
+    new ClipAndFile();
     assert.notEqual(TestUtils.getHtmlBridge(), null, "The bridge does exist after creating a client");
-    ZeroClipboard.destroy();
+    ClipAndFile.destroy();
     assert.equal(TestUtils.getHtmlBridge(), null, "The bridge does not exist after calling `destroy`");
   });
 
 
 
 
-  module("ZeroClipboard.js (built) unit tests - Client", {
+  module("ClipAndFile.js (built) unit tests - Client", {
     setup: function() {
       // Store
-      originalConfig = ZeroClipboard.config();
-      originalFlashDetect = ZeroClipboard.isFlashUnusable;
+      originalConfig = ClipAndFile.config();
+      originalFlashDetect = ClipAndFile.isFlashUnusable;
       // Modify
-      ZeroClipboard.isFlashUnusable = function() {
+      ClipAndFile.isFlashUnusable = function() {
         return false;
       };
-      ZeroClipboard.config({ swfPath: originalConfig.swfPath.replace(/\/(?:src|test)\/.*$/i, "/dist/ZeroClipboard.swf") });
+      ClipAndFile.config({ swfPath: originalConfig.swfPath.replace(/\/(?:src|test)\/.*$/i, "/dist/ClipAndFile.swf") });
     },
     teardown: function() {
       // Restore
-      ZeroClipboard.destroy();
-      ZeroClipboard.config(originalConfig);
-      ZeroClipboard.isFlashUnusable = originalFlashDetect;
+      ClipAndFile.destroy();
+      ClipAndFile.config(originalConfig);
+      ClipAndFile.isFlashUnusable = originalFlashDetect;
     }
   });
 
-  test("`ZeroClipboard` exists", function(assert) {
+  test("`ClipAndFile` exists", function(assert) {
     assert.expect(1);
 
     // Arrange -> N/A
@@ -96,14 +96,14 @@
     // Act -> N/A
 
     // Assert
-    assert.ok(ZeroClipboard);
+    assert.ok(ClipAndFile);
   });
 
   test("Client is created properly", function(assert) {
     assert.expect(2);
 
     // Arrange & Act
-    var client = new ZeroClipboard();
+    var client = new ClipAndFile();
 
     // Assert
     assert.ok(client);
@@ -114,7 +114,7 @@
     assert.expect(2);
 
     // Arrange & Act
-    var client = new ZeroClipboard();
+    var client = new ClipAndFile();
 
     // Assert
     assert.ok(client);
@@ -125,30 +125,30 @@
     assert.expect(1);
 
     // Arrange
-    var client = new ZeroClipboard();
+    var client = new ClipAndFile();
     var currentEl = document.getElementById("d_clip_button");
 
     // Act
     client.clip(currentEl);
-    ZeroClipboard.activate(currentEl);
+    ClipAndFile.activate(currentEl);
 
     // Assert
     assert.strictEqual(TestUtils.getHtmlBridge().getAttribute("title"), "Click me to copy to clipboard.");
 
     // Revert
-    ZeroClipboard.deactivate();
+    ClipAndFile.deactivate();
   });
 
   test("Object has no title", function(assert) {
     assert.expect(1);
 
     // Arrange
-    var client = new ZeroClipboard();
+    var client = new ClipAndFile();
     var currentEl = document.getElementById("d_clip_button_no_title");
 
     // Act
     client.clip(currentEl);
-    ZeroClipboard.activate(currentEl);
+    ClipAndFile.activate(currentEl);
 
     // Assert
     assert.ok(!TestUtils.getHtmlBridge().getAttribute("title"));
@@ -158,12 +158,12 @@
     assert.expect(1);
 
     // Arrange
-    var client = new ZeroClipboard();
+    var client = new ClipAndFile();
     var currentEl = document.getElementById("d_clip_button_no_text");
 
     // Act
     client.clip(currentEl);
-    ZeroClipboard.activate(currentEl);
+    ClipAndFile.activate(currentEl);
 
     // Assert
     assert.ok(!TestUtils.getHtmlBridge().getAttribute("data-clipboard-text"));
@@ -173,12 +173,12 @@
     assert.expect(6);
 
     // Assert, arrange, assert, act, assert
-    var containerClass = "." + ZeroClipboard.config("containerClass");
+    var containerClass = "." + ClipAndFile.config("containerClass");
     assert.strictEqual($(containerClass).length, 0);
-    var client1 = new ZeroClipboard();
+    var client1 = new ClipAndFile();
     assert.ok(client1.id);
     assert.strictEqual($(containerClass).length, 1);
-    var client2 = new ZeroClipboard();
+    var client2 = new ClipAndFile();
     assert.strictEqual($(containerClass).length, 1);
     assert.notEqual(client2.id, client1.id);
     assert.notEqual(client2, client1);
@@ -188,12 +188,12 @@
     assert.expect(4);
 
     // Arrange
-    var client = new ZeroClipboard();
+    var client = new ClipAndFile();
     var currentEl = document.getElementById("d_clip_button");
 
     // Act
     client.clip(currentEl);
-    ZeroClipboard.activate(currentEl);
+    ClipAndFile.activate(currentEl);
 
     // Assert
     var htmlBridge = TestUtils.getHtmlBridge();
@@ -207,21 +207,21 @@
     assert.expect(7);
 
     // Arrange
-    ZeroClipboard.isFlashUnusable = function() {
+    ClipAndFile.isFlashUnusable = function() {
       return false;
     };
 
     // Assert, arrange, assert, act, assert
-    assert.ok(!ZeroClipboard.prototype._singleton, "The client singleton does not exist on the prototype before creating a client");
-    var client1 = new ZeroClipboard();
-    assert.ok(!ZeroClipboard.prototype._singleton, "The client singleton does not exist on the prototype after creating a client");
+    assert.ok(!ClipAndFile.prototype._singleton, "The client singleton does not exist on the prototype before creating a client");
+    var client1 = new ClipAndFile();
+    assert.ok(!ClipAndFile.prototype._singleton, "The client singleton does not exist on the prototype after creating a client");
     assert.ok(!client1._singleton, "The client singleton does not exist on the client instance after creating a client");
-    var client2 = new ZeroClipboard();
-    assert.ok(!ZeroClipboard.prototype._singleton, "The client singleton does not exist on the prototype after creating a second client");
+    var client2 = new ClipAndFile();
+    assert.ok(!ClipAndFile.prototype._singleton, "The client singleton does not exist on the prototype after creating a second client");
     assert.ok(!client1._singleton, "The client singleton does not exist on the first client instance after creating a second client");
     assert.ok(!client2._singleton, "The client singleton does not exist on the second client instance after creating a second client");
-    ZeroClipboard.destroy();
-    assert.ok(!ZeroClipboard.prototype._singleton, "The client singleton does not exist on the prototype after calling `destroy`");
+    ClipAndFile.destroy();
+    assert.ok(!ClipAndFile.prototype._singleton, "The client singleton does not exist on the prototype after calling `destroy`");
   });
 
 

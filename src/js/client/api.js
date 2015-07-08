@@ -1,10 +1,10 @@
 /**
- * Creates a new ZeroClipboard client instance.
+ * Creates a new ClipAndFile client instance.
  * Optionally, auto-`clip` an element or collection of elements.
  *
  * @constructor
  */
-ZeroClipboard._createClient = function(/* elements */) {
+ClipAndFile._createClient = function(/* elements */) {
   // Invoke the real constructor
   _clientConstructor.apply(this, _args(arguments));
 };
@@ -15,7 +15,7 @@ ZeroClipboard._createClient = function(/* elements */) {
  *
  * @returns `this`
  */
-ZeroClipboard.prototype.on = function(/* eventType, listener */) {
+ClipAndFile.prototype.on = function(/* eventType, listener */) {
   return _clientOn.apply(this, _args(arguments));
 };
 
@@ -27,7 +27,7 @@ ZeroClipboard.prototype.on = function(/* eventType, listener */) {
  *
  * @returns `this`
  */
-ZeroClipboard.prototype.off = function(/* eventType, listener */) {
+ClipAndFile.prototype.off = function(/* eventType, listener */) {
   return _clientOff.apply(this, _args(arguments));
 };
 
@@ -38,7 +38,7 @@ ZeroClipboard.prototype.off = function(/* eventType, listener */) {
  *
  * @returns array of listeners for the `eventType`; if no `eventType`, then a map/hash object of listeners for all event types; or `null`
  */
-ZeroClipboard.prototype.handlers = function(/* eventType */) {
+ClipAndFile.prototype.handlers = function(/* eventType */) {
   return _clientListeners.apply(this, _args(arguments));
 };
 
@@ -48,7 +48,7 @@ ZeroClipboard.prototype.handlers = function(/* eventType */) {
  *
  * @returns For the "copy" event, returns the Flash-friendly "clipData" object; otherwise `undefined`.
  */
-ZeroClipboard.prototype.emit = function(/* event */) {
+ClipAndFile.prototype.emit = function(/* event */) {
   return _clientEmit.apply(this, _args(arguments));
 };
 
@@ -58,7 +58,7 @@ ZeroClipboard.prototype.emit = function(/* event */) {
  *
  * @returns `this`
  */
-ZeroClipboard.prototype.clip = function(/* elements */) {
+ClipAndFile.prototype.clip = function(/* elements */) {
   return _clientClip.apply(this, _args(arguments));
 };
 
@@ -69,7 +69,7 @@ ZeroClipboard.prototype.clip = function(/* elements */) {
  *
  * @returns `this`
  */
-ZeroClipboard.prototype.unclip = function(/* elements */) {
+ClipAndFile.prototype.unclip = function(/* elements */) {
   return _clientUnclip.apply(this, _args(arguments));
 };
 
@@ -79,7 +79,7 @@ ZeroClipboard.prototype.unclip = function(/* elements */) {
  *
  * @returns array of clipped elements
  */
-ZeroClipboard.prototype.elements = function() {
+ClipAndFile.prototype.elements = function() {
   return _clientElements.apply(this, _args(arguments));
 };
 
@@ -90,7 +90,7 @@ ZeroClipboard.prototype.elements = function() {
  *
  * @returns `undefined`
  */
-ZeroClipboard.prototype.destroy = function() {
+ClipAndFile.prototype.destroy = function() {
   return _clientDestroy.apply(this, _args(arguments));
 };
 
@@ -100,8 +100,8 @@ ZeroClipboard.prototype.destroy = function() {
  *
  * @returns `this`
  */
-ZeroClipboard.prototype.setText = function(text) {
-  ZeroClipboard.setData("text/plain", text);
+ClipAndFile.prototype.setText = function(text) {
+  ClipAndFile.setData("text/plain", text);
   return this;
 };
 
@@ -111,8 +111,8 @@ ZeroClipboard.prototype.setText = function(text) {
  *
  * @returns `this`
  */
-ZeroClipboard.prototype.setHtml = function(html) {
-  ZeroClipboard.setData("text/html", html);
+ClipAndFile.prototype.setHtml = function(html) {
+  ClipAndFile.setData("text/html", html);
   return this;
 };
 
@@ -122,8 +122,8 @@ ZeroClipboard.prototype.setHtml = function(html) {
  *
  * @returns `this`
  */
-ZeroClipboard.prototype.setRichText = function(richText) {
-  ZeroClipboard.setData("application/rtf", richText);
+ClipAndFile.prototype.setRichText = function(richText) {
+  ClipAndFile.setData("application/rtf", richText);
   return this;
 };
 
@@ -133,8 +133,19 @@ ZeroClipboard.prototype.setRichText = function(richText) {
  *
  * @returns `this`
  */
-ZeroClipboard.prototype.setData = function(/* format, data */) {
-  ZeroClipboard.setData.apply(this, _args(arguments));
+ClipAndFile.prototype.setData = function(/* format, data */) {
+  ClipAndFile.setData.apply(this, _args(arguments));
+  return this;
+};
+
+
+/**
+ * Stores the pending data to save as a file.  Call only once.
+ *
+ * @returns `this`
+ */
+ClipAndFile.prototype.setFile = function(/* filename, data, isBase64 */) {
+  ClipAndFile.setFile.apply(this, _args(arguments));
   return this;
 };
 
@@ -145,7 +156,7 @@ ZeroClipboard.prototype.setData = function(/* format, data */) {
  *
  * @returns `this`
  */
-ZeroClipboard.prototype.clearData = function(/* format */) {
-  ZeroClipboard.clearData.apply(this, _args(arguments));
+ClipAndFile.prototype.clearData = function(/* format */) {
+  ClipAndFile.clearData.apply(this, _args(arguments));
   return this;
 };

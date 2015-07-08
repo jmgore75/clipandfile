@@ -1,5 +1,5 @@
 /**
- * The underlying implementation of `ZeroClipboard.config`.
+ * The underlying implementation of `ClipAndFile.config`.
  * @private
  */
 var _config = function(options) {
@@ -47,23 +47,23 @@ var _config = function(options) {
 
 
 /**
- * The underlying implementation of `ZeroClipboard.state`.
+ * The underlying implementation of `ClipAndFile.state`.
  * @private
  */
 var _state = function() {
   return {
     browser: _pick(_navigator, ["userAgent", "platform", "appName"]),
     flash: _omit(_flashState, ["bridge"]),
-    zeroclipboard: {
-      version: ZeroClipboard.version,
-      config: ZeroClipboard.config()
+    clipandfile: {
+      version: ClipAndFile.version,
+      config: ClipAndFile.config()
     }
   };
 };
 
 
 /**
- * The underlying implementation of `ZeroClipboard.isFlashUnusable`.
+ * The underlying implementation of `ClipAndFile.isFlashUnusable`.
  * @private
  */
 var _isFlashUnusable = function() {
@@ -77,7 +77,7 @@ var _isFlashUnusable = function() {
 
 
 /**
- * The underlying implementation of `ZeroClipboard.on`.
+ * The underlying implementation of `ClipAndFile.on`.
  * @private
  */
 var _on = function(eventType, listener) {
@@ -90,7 +90,7 @@ var _on = function(eventType, listener) {
   else if (typeof eventType === "object" && eventType && typeof listener === "undefined") {
     for (i in eventType) {
       if (_hasOwn.call(eventType, i) && typeof i === "string" && i && typeof eventType[i] === "function") {
-        ZeroClipboard.on(i, eventType[i]);
+        ClipAndFile.on(i, eventType[i]);
       }
     }
   }
@@ -110,7 +110,7 @@ var _on = function(eventType, listener) {
 
     // If the SWF was already loaded, we're à gogo!
     if (added.ready && _flashState.ready) {
-      ZeroClipboard.emit({
+      ClipAndFile.emit({
         type: "ready"
       });
     }
@@ -118,7 +118,7 @@ var _on = function(eventType, listener) {
       var errorTypes = ["disabled", "outdated", "unavailable", "deactivated", "overdue"];
       for (i = 0, len = errorTypes.length; i < len; i++) {
         if (_flashState[errorTypes[i]] === true) {
-          ZeroClipboard.emit({
+          ClipAndFile.emit({
             type: "error",
             name: "flash-" + errorTypes[i]
           });
@@ -128,12 +128,12 @@ var _on = function(eventType, listener) {
     }
   }
 
-  return ZeroClipboard;
+  return ClipAndFile;
 };
 
 
 /**
- * The underlying implementation of `ZeroClipboard.off`.
+ * The underlying implementation of `ClipAndFile.off`.
  * @private
  */
 var _off = function(eventType, listener) {
@@ -148,7 +148,7 @@ var _off = function(eventType, listener) {
   else if (typeof eventType === "object" && eventType && typeof listener === "undefined") {
     for (i in eventType) {
       if (_hasOwn.call(eventType, i) && typeof i === "string" && i && typeof eventType[i] === "function") {
-        ZeroClipboard.off(i, eventType[i]);
+        ClipAndFile.off(i, eventType[i]);
       }
     }
   }
@@ -173,12 +173,12 @@ var _off = function(eventType, listener) {
     }
   }
 
-  return ZeroClipboard;
+  return ClipAndFile;
 };
 
 
 /**
- * The underlying implementation of `ZeroClipboard.handlers`.
+ * The underlying implementation of `ClipAndFile.handlers`.
  * @private
  */
 var _listeners = function(eventType) {
@@ -194,7 +194,7 @@ var _listeners = function(eventType) {
 
 
 /**
- * The underlying implementation of `ZeroClipboard.emit`.
+ * The underlying implementation of `ClipAndFile.emit`.
  * @private
  */
 var _emit = function(event) {
@@ -214,7 +214,7 @@ var _emit = function(event) {
 
   // If this was a Flash "ready" event that was overdue, bail out and fire an "error" event instead
   if (event.type === "ready" && _flashState.overdue === true) {
-    return ZeroClipboard.emit({ "type": "error", "name": "flash-overdue" });
+    return ClipAndFile.emit({ "type": "error", "name": "flash-overdue" });
   }
 
   // Trigger any and all registered event handlers
@@ -232,7 +232,7 @@ var _emit = function(event) {
 
 
 /**
- * The underlying implementation of `ZeroClipboard.create`.
+ * The underlying implementation of `ClipAndFile.create`.
  * @private
  */
 var _create = function() {
@@ -240,7 +240,7 @@ var _create = function() {
   if (typeof _flashState.ready !== "boolean") {
     _flashState.ready = false;
   }
-  if (!ZeroClipboard.isFlashUnusable() && _flashState.bridge === null) {
+  if (!ClipAndFile.isFlashUnusable() && _flashState.bridge === null) {
     var maxWait = _globalConfig.flashLoadTimeout;
     if (typeof maxWait === "number" && maxWait >= 0) {
       _setTimeout(function() {
@@ -250,7 +250,7 @@ var _create = function() {
           _flashState.deactivated = true;
         }
         if (_flashState.deactivated === true) {
-          ZeroClipboard.emit({ "type": "error", "name": "flash-deactivated" });
+          ClipAndFile.emit({ "type": "error", "name": "flash-deactivated" });
         }
       }, maxWait);
     }
@@ -265,47 +265,45 @@ var _create = function() {
 
 
 /**
- * The underlying implementation of `ZeroClipboard.destroy`.
+ * The underlying implementation of `ClipAndFile.destroy`.
  * @private
  */
 var _destroy = function() {
   // Clear any pending clipboard data
-  ZeroClipboard.clearData();
+  ClipAndFile.clearData();
 
   // Deactivate during self-destruct, even if `_globalConfig.autoActivate` !== `true`
-  ZeroClipboard.deactivate();
+  ClipAndFile.deactivate();
 
   // Emit a special [synchronously handled] event so that Clients may listen
   // for it and destroy themselves
-  ZeroClipboard.emit("destroy");
+  ClipAndFile.emit("destroy");
 
   // Un-embed the SWF
   _unembedSwf();
 
   // Remove all event handlers
-  ZeroClipboard.off();
+  ClipAndFile.off();
 };
 
 
 /**
- * The underlying implementation of `ZeroClipboard.setData`.
+ * The underlying implementation of `ClipAndFile.setData`.
  * @private
  */
-var _setData = function(format, data, filename, b64) {
+var _setData = function(format, data) {
   var dataObj;
 
   if (typeof format === "object" && format && typeof data === "undefined") {
     dataObj = format;
 
     // Clear out existing pending data if an object is provided
-    ZeroClipboard.clearData();
+    ClipAndFile.clearData();
   }
   else if (typeof format === "string" && format) {
+    _deleteOwnProperties(_fileData);
     dataObj = {};
     dataObj[format] = data;
-    _fileData.format = format; 
-    _fileData.filename = filename; 
-    _fileData.b64 = !!b64; 
   }
   else {
     return;
@@ -322,9 +320,24 @@ var _setData = function(format, data, filename, b64) {
   }
 };
 
+/**
+ * The underlying implementation of `ClipAndFile.setFile`.
+ * @private
+ */
+var _setFile = function(filename, data, b64) {
+  b64 = !!b64; 
+  data = data || ""; 
+  if (typeof data === "string" && typeof filename === "string" && filename) {
+    // Clear out existing pending data
+    ClipAndFile.clearData();
+    _fileData.filename = filename; 
+    _fileData.file = data; 
+    _fileData.b64 = b64; 
+  }
+};
 
 /**
- * The underlying implementation of `ZeroClipboard.clearData`.
+ * The underlying implementation of `ClipAndFile.clearData`.
  * @private
  */
 var _clearData = function(format) {
@@ -342,7 +355,7 @@ var _clearData = function(format) {
 
 
 /**
- * The underlying implementation of `ZeroClipboard.activate`.
+ * The underlying implementation of `ClipAndFile.activate`.
  * @private
  */
 var _activate = function(element) {
@@ -383,7 +396,7 @@ var _activate = function(element) {
 
 
 /**
- * The underlying implementation of `ZeroClipboard.deactivate`.
+ * The underlying implementation of `ClipAndFile.deactivate`.
  * @private
  */
 var _deactivate = function() {
@@ -483,8 +496,9 @@ var _createEvent = function(event) {
   // Add all of the special properties and methods for a `copy` event
   if (event.type === "copy") {
     event.clipboardData = {
-      setData: ZeroClipboard.setData,
-      clearData: ZeroClipboard.clearData
+      setData: ClipAndFile.setData,
+      setFile: ClipAndFile.setFile,
+      clearData: ClipAndFile.clearData
     };
   }
 
@@ -656,6 +670,43 @@ var _dispatchCallbacks = function(event) {
   return this;
 };
 
+var _preprocessCopyEvent = function (event) {
+  var textContent,
+      htmlContent,
+      filename, 
+      targetEl = event.relatedTarget;
+  if (event.target && (filename = event.target.getAttribute("data-clipboard-file"))) {
+    if (
+      targetEl &&
+      (textContent = targetEl.value || targetEl.textContent || targetEl.innerText)
+    ) {
+      event.clipboardData.setFile(filename, textContent);
+    } 
+    else if ((textContent = event.target.getAttribute("data-clipboard-text"))) {
+      event.clipboardData.setFile(filename, textContent);
+    } 
+    else if ((textContent = event.target.getAttribute("data-clipboard-b64"))) {
+      event.clipboardData.setFile(filename, textContent, true);
+    }
+  } else {
+    if (
+      !(_clipData["text/html"] || _clipData["text/plain"]) &&
+      targetEl &&
+      (htmlContent = targetEl.value || targetEl.outerHTML || targetEl.innerHTML) &&
+      (textContent = targetEl.value || targetEl.textContent || targetEl.innerText)
+    ) {
+      event.clipboardData.clearData();
+      event.clipboardData.setData("text/plain", textContent);
+      if (htmlContent !== textContent) {
+        event.clipboardData.setData("text/html", htmlContent);
+      }
+    } 
+    else if (!_clipData["text/plain"] && event.target && (textContent = event.target.getAttribute("data-clipboard-text"))) {
+      event.clipboardData.clearData();
+      event.clipboardData.setData("text/plain", textContent);
+    }
+  }
+}; 
 
 /**
  * Preprocess any special behaviors, reactions, or state changes after receiving this event.
@@ -695,30 +746,12 @@ var _preprocessEvent = function(event) {
       break;
 
     case "copy":
-      var textContent,
-          htmlContent,
-          targetEl = event.relatedTarget;
-      if (
-        !(_clipData["text/html"] || _clipData["text/plain"]) &&
-        targetEl &&
-        (htmlContent = targetEl.value || targetEl.outerHTML || targetEl.innerHTML) &&
-        (textContent = targetEl.value || targetEl.textContent || targetEl.innerText)
-      ) {
-        event.clipboardData.clearData();
-        event.clipboardData.setData("text/plain", textContent);
-        if (htmlContent !== textContent) {
-          event.clipboardData.setData("text/html", htmlContent);
-        }
-      }
-      else if (!_clipData["text/plain"] && event.target && (textContent = event.target.getAttribute("data-clipboard-text"))) {
-        event.clipboardData.clearData();
-        event.clipboardData.setData("text/plain", textContent);
-      }
+      _preprocessCopyEvent(event); 
       break;
 
     case "aftercopy":
       // If the copy has [or should have] occurred, clear out all of the data
-      ZeroClipboard.clearData();
+      ClipAndFile.clearData();
 
       // Focus the context back on the trigger element (blur the Flash element)
       if (element && element !== _safeActiveElement() && element.focus) {
@@ -728,7 +761,7 @@ var _preprocessEvent = function(event) {
 
     case "_mouseover":
       // Set this as the new currently active element
-      ZeroClipboard.activate(element);
+      ClipAndFile.activate(element);
       
       if (_globalConfig.bubbleEvents === true && sourceIsSwf) {
         if (
@@ -745,7 +778,7 @@ var _preprocessEvent = function(event) {
 
     case "_mouseout":
       // If the mouse is moving to any other element, deactivate and...
-      ZeroClipboard.deactivate();
+      ClipAndFile.deactivate();
 
       if (_globalConfig.bubbleEvents === true && sourceIsSwf) {
         if (
@@ -934,11 +967,11 @@ var _embedSwf = function() {
     flashBridge = tmpDiv.firstChild;
     tmpDiv = null;
 
-    // Store a reference to the `ZeroClipboard` object as a DOM property
-    // on the ZeroClipboard-owned "object" element. This will help us
+    // Store a reference to the `ClipAndFile` object as a DOM property
+    // on the ClipAndFile-owned "object" element. This will help us
     // easily avoid issues with AMD/CommonJS loaders that don't have
-    // a global `ZeroClipboard` reliably available.
-    flashBridge.ZeroClipboard = ZeroClipboard;
+    // a global `ClipAndFile` reliably available.
+    flashBridge.ClipAndFile = ClipAndFile;
 
     // NOTE: Using `replaceChild` is very important!
     // - https://github.com/swfobject/swfobject/blob/562fe358216edbb36445aa62f817c1a56252950c/swfobject/src/swfobject.js
@@ -1027,11 +1060,10 @@ var _unembedSwf = function() {
       return;
     }
     if ((typeof fileData === "object" && fileData && fileData.filename)) {
-      newClipData.file = clipData[fileData.format]; 
+      newClipData.file = fileData.file; 
       newClipData.filename = fileData.filename; 
       newClipData.b64 = fileData.b64; 
-      formatMap.file = fileData.format; 
-      return;
+      formatMap.file = "file"; 
     } else {
       for (var dataFormat in clipData) {
         if (dataFormat && _hasOwn.call(clipData, dataFormat) && typeof clipData[dataFormat] === "string" && clipData[dataFormat]) {

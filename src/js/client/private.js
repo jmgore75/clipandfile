@@ -1,5 +1,5 @@
 /**
- * The real constructor for `ZeroClipboard` client instances.
+ * The real constructor for `ClipAndFile` client instances.
  * @private
  */
 var _clientConstructor = function(elements) {
@@ -22,22 +22,22 @@ var _clientConstructor = function(elements) {
   }
 
   // ECHO! Our client's sounding board.
-  ZeroClipboard.on("*", function(event) {
+  ClipAndFile.on("*", function(event) {
     return client.emit(event);
   });
 
   // Await imminent destruction...
-  ZeroClipboard.on("destroy", function() {
+  ClipAndFile.on("destroy", function() {
     client.destroy();
   });
 
   // Move on: embed the SWF
-  ZeroClipboard.create();
+  ClipAndFile.create();
 };
 
 
 /**
- * The underlying implementation of `ZeroClipboard.Client.prototype.on`.
+ * The underlying implementation of `ClipAndFile.Client.prototype.on`.
  * @private
  */
 var _clientOn = function(eventType, listener) {
@@ -96,7 +96,7 @@ var _clientOn = function(eventType, listener) {
 
 
 /**
- * The underlying implementation of `ZeroClipboard.Client.prototype.off`.
+ * The underlying implementation of `ClipAndFile.Client.prototype.off`.
  * @private
  */
 var _clientOff = function(eventType, listener) {
@@ -141,7 +141,7 @@ var _clientOff = function(eventType, listener) {
 
 
 /**
- * The underlying implementation of `ZeroClipboard.Client.prototype.handlers`.
+ * The underlying implementation of `ClipAndFile.Client.prototype.handlers`.
  * @private
  */
 var _clientListeners = function(eventType) {
@@ -162,7 +162,7 @@ var _clientListeners = function(eventType) {
 
 
 /**
- * The underlying implementation of `ZeroClipboard.Client.prototype.emit`.
+ * The underlying implementation of `ClipAndFile.Client.prototype.emit`.
  * @private
  */
 var _clientEmit = function(event) {
@@ -179,7 +179,7 @@ var _clientEmit = function(event) {
 
 
 /**
- * The underlying implementation of `ZeroClipboard.Client.prototype.clip`.
+ * The underlying implementation of `ClipAndFile.Client.prototype.clip`.
  * @private
  */
 var _clientClip = function(elements) {
@@ -188,15 +188,15 @@ var _clientClip = function(elements) {
   for (var i = 0; i < elements.length ; i++) {
     if (_hasOwn.call(elements, i) && elements[i] && elements[i].nodeType === 1) {
       // If the element hasn't been clipped to ANY client yet, add a metadata ID and event handler
-      if (!elements[i].zcClippingId) {
-        elements[i].zcClippingId = "zcClippingId_" + (_elementIdCounter++);
-        _elementMeta[elements[i].zcClippingId] = [this.id];
+      if (!elements[i].cafClippingId) {
+        elements[i].cafClippingId = "cafClippingId_" + (_elementIdCounter++);
+        _elementMeta[elements[i].cafClippingId] = [this.id];
         if (_globalConfig.autoActivate === true) {
           _addMouseHandlers(elements[i]);
         }
       }
-      else if (_inArray(this.id, _elementMeta[elements[i].zcClippingId]) === -1) {
-        _elementMeta[elements[i].zcClippingId].push(this.id);
+      else if (_inArray(this.id, _elementMeta[elements[i].cafClippingId]) === -1) {
+        _elementMeta[elements[i].cafClippingId].push(this.id);
       }
 
       // If the element hasn't been clipped to THIS client yet, add it
@@ -211,7 +211,7 @@ var _clientClip = function(elements) {
 
 
 /**
- * The underlying implementation of `ZeroClipboard.Client.prototype.unclip`.
+ * The underlying implementation of `ClipAndFile.Client.prototype.unclip`.
  * @private
  */
 var _clientUnclip = function(elements) {
@@ -241,7 +241,7 @@ var _clientUnclip = function(elements) {
       }
 
       // If the element isn't clipped to ANY other client, remove its metadata ID and event handler
-      var clientIds = _elementMeta[elements[i].zcClippingId];
+      var clientIds = _elementMeta[elements[i].cafClippingId];
       if (clientIds) {
         arrayIndex = 0;
         while ((arrayIndex = _inArray(this.id, clientIds, arrayIndex)) !== -1) {
@@ -252,9 +252,9 @@ var _clientUnclip = function(elements) {
             _removeMouseHandlers(elements[i]);
           }
           try {
-            delete elements[i].zcClippingId; 
+            delete elements[i].cafClippingId; 
           } catch (e) {
-            elements[i].zcClippingId = undefined;
+            elements[i].cafClippingId = undefined;
           }
         }
       }
@@ -265,7 +265,7 @@ var _clientUnclip = function(elements) {
 
 
 /**
- * The underlying implementation of `ZeroClipboard.Client.prototype.elements`.
+ * The underlying implementation of `ClipAndFile.Client.prototype.elements`.
  * @private
  */
 var _clientElements = function() {
@@ -275,7 +275,7 @@ var _clientElements = function() {
 
 
 /**
- * The underlying implementation of `ZeroClipboard.Client.prototype.destroy`.
+ * The underlying implementation of `ClipAndFile.Client.prototype.destroy`.
  * @private
  */
 var _clientDestroy = function() {
@@ -452,14 +452,14 @@ var _addMouseHandlers = function(element) {
     }
 
     // Set this as the new currently active element
-    ZeroClipboard.activate(element);
+    ClipAndFile.activate(element);
   };
 
   // Add the `mouseover` handler function
   _addEventHandler(element, "mouseover", _elementMouseOver);
 
   // Save these function references to a global variable
-  _mouseHandlers[element.zcClippingId] = {
+  _mouseHandlers[element.cafClippingId] = {
     mouseover: _elementMouseOver
   };
 };
@@ -477,7 +477,7 @@ var _removeMouseHandlers = function(element) {
   }
 
   // Retrieve these function references from a global variable
-  var mouseHandlers = _mouseHandlers[element.zcClippingId];
+  var mouseHandlers = _mouseHandlers[element.cafClippingId];
   if (!(typeof mouseHandlers === "object" && mouseHandlers)) {
     return;
   }
@@ -488,5 +488,5 @@ var _removeMouseHandlers = function(element) {
   }
 
   // Delete these function references from a global variable
-  delete _mouseHandlers[element.zcClippingId];
+  delete _mouseHandlers[element.cafClippingId];
 };

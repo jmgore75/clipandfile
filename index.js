@@ -12,7 +12,7 @@ exports = module.exports = setup;
 var http = require('http');
 var send = require('send');
 var root = __dirname;
-var swf = '/ZeroClipboard.swf';
+var swf = '/ClipAndFile.swf';
 
 function setup () {
   return http.createServer(onReq);

@@ -1,62 +1,62 @@
-# ZeroClipboard.Core API
+# ClipAndFile API
 
-This documents details the **ZeroClipboard.Core** API, including various types of properties, methods, and events. **ZeroClipboard.Core** is primarily intended for use in wrapping ZeroClipboard in 3rd party plugins, e.g. [jquery.zeroclipboard](https://github.com/JamesMGreene/jquery.zeroclipboard).
+This documents details the ClipAndFile API, including various types of properties, methods, and events.
 
 
 ## Static
 
 ### Static Properties
 
-#### `ZeroClipboard.version`
+#### `ClipAndFile.version`
 
-_[`String`]_ The version of the ZeroClipboard library being used, e.g. `"v2.0.0"`.
+_[`String`]_ The version of the ClipAndFile library being used, e.g. `"v1.0.0"`.
 
 
 ### Static Methods
 
-#### `ZeroClipboard.config(...)`
+#### `ClipAndFile.config(...)`
 
 ```js
-var config = ZeroClipboard.config();
+var config = ClipAndFile.config();
 ```
 
-_[`Object`]_ Get a copy of the active configuration for ZeroClipboard.
+_[`Object`]_ Get a copy of the active configuration for ClipAndFile.
 
 
 ```js
-var swfPath = ZeroClipboard.config("swfPath");
+var swfPath = ClipAndFile.config("swfPath");
 ```
 
-_[`*`]_ Get a copy of the actively configured value for this configuration property for ZeroClipboard.
+_[`*`]_ Get a copy of the actively configured value for this configuration property for ClipAndFile.
 
 
 ```js
-var config = ZeroClipboard.config({
+var config = ClipAndFile.config({
   forceHandCursor: true
 });
 ```
 
-_[`Object`]_ Set the active configuration for ZeroClipboard. Returns a copy of the updated active configuration. For complete details about what can be configured, see [**Configuration Options** below](#configuration-options).
+_[`Object`]_ Set the active configuration for ClipAndFile. Returns a copy of the updated active configuration. For complete details about what can be configured, see [**Configuration Options** below](#configuration-options).
 
 
-#### `ZeroClipboard.create()`
-_[`undefined`]_ Create the Flash bridge SWF object.
+#### `ClipAndFile.create()`
+_[`undefined`]_ Create the Flash bridge SWF object. _**IMPORTANT:**_ This method should be considered private.
 
 
-#### `ZeroClipboard.destroy()`
+#### `ClipAndFile.destroy()`
 _[`undefined`]_ Emit the [`"destroy"`](#destroy) event, remove all event handlers, and destroy the Flash bridge.
 
 
-#### `ZeroClipboard.setData(...)`
+#### `ClipAndFile.setData(...)`
 
 ```js
-ZeroClipboard.setData("text/plain", "Blah");
+ClipAndFile.setData("text/plain", "Blah");
 ```
 
 _[`undefined`]_ Set the pending `data` of type `format` for clipboard injection.
 
 ```js
-ZeroClipboard.setData({
+ClipAndFile.setData({
   "text/plain": "Blah",
   "text/html": "<b>Blah</b>"
 });
@@ -64,68 +64,75 @@ ZeroClipboard.setData({
 
 _[`undefined`]_ Set the pending `data` of various formats for clipboard injection.
 
-
-#### `ZeroClipboard.clearData(...)`
+#### `ClipAndFile.setFile(...)`
 
 ```js
-ZeroClipboard.clearData("text/plain");
+ClipAndFile.setFile("example.txt", "Blah", false);
+```
+
+_[`undefined`]_ Set the pending `filename` with `data` and true if `b64` format for file save.
+
+#### `ClipAndFile.clearData(...)`
+
+```js
+ClipAndFile.clearData("text/plain");
 ```
 
 _[`undefined`]_ Clear the pending data of type `format` for clipboard injection.
 
 ```js
-ZeroClipboard.clearData();
+ClipAndFile.clearData();
 ```
 
-_[`undefined`]_ Clear the pending data of ALL formats for clipboard injection.
+_[`undefined`]_ Clear the pending data of ALL formats for clipboard injection and file save.
 
 
-#### `ZeroClipboard.activate(...)`
+#### `ClipAndFile.activate(...)`
 
 ```js
-ZeroClipboard.activate(document.getElementById("d_clip_button"));
+ClipAndFile.activate(document.getElementById("d_clip_button"));
 ```
 
 _[`undefined`]_ "Activate" the provided element by moving the Flash SWF object in front of it.
 
 
-#### `ZeroClipboard.deactivate()`
+#### `ClipAndFile.deactivate()`
 
 _[`undefined`]_ "Deactivate" the currently "activated" element, moving the Flash SWF object off the screen.
 
 
-#### `ZeroClipboard.state()`
+#### `ClipAndFile.state()`
 
-_[`Object`]_ Diagnostic method that describes the state of the browser, Flash Player, and ZeroClipboard.
+_[`Object`]_ Diagnostic method that describes the state of the browser, Flash Player, and ClipAndFile.
 
 
-#### `ZeroClipboard.isFlashUnavailable()`
+#### `ClipAndFile.isFlashUnavailable()`
 
 _[`Boolean`]_ Indicates if Flash Player is **definitely** unusable (disabled, outdated, unavailable, or deactivated). _**IMPORTANT:**_ This method should be considered private.
 
 
-#### `ZeroClipboard.on(...)`
+#### `ClipAndFile.on(...)`
 
 ```js
-var listenerFn = function(e) { var ZeroClipboard = this; /* ... */ };
-ZeroClipboard.on("ready", listenerFn);
+var listenerFn = function(e) { var ClipAndFile = this; /* ... */ };
+ClipAndFile.on("ready", listenerFn);
 
 var listenerObj = {
   handleEvent: function(e) { var listenerObj = this; /* ... */ }
 };
-ZeroClipboard.on("error", listenerObj);
+ClipAndFile.on("error", listenerObj);
 ```
 
 _[`undefined`]_ Add a `listener` function/object for an `eventType`.
 
 ```js
-ZeroClipboard.on("ready error", function(e) { /* ... */ });
+ClipAndFile.on("ready error", function(e) { /* ... */ });
 ```
 
 _[`undefined`]_ Add a `listener` function/object for multiple `eventType`s.
 
 ```js
-ZeroClipboard.on({
+ClipAndFile.on({
   "ready": function(e) { /* ... */ },
   "error": function(e) { /* ... */ }
 });
@@ -134,23 +141,23 @@ ZeroClipboard.on({
 _[`undefined`]_ Add a set of `eventType` to `listener` function/object mappings.
 
 
-#### `ZeroClipboard.off(...)`
+#### `ClipAndFile.off(...)`
 
 ```js
-ZeroClipboard.off("ready", listenerFn);
-ZeroClipboard.off("error", listenerObj);
+ClipAndFile.off("ready", listenerFn);
+ClipAndFile.off("error", listenerObj);
 ```
 
 _[`undefined`]_ Remove a `listener` function/object for an `eventType`.
 
 ```js
-ZeroClipboard.off("ready error", listenerFn);
+ClipAndFile.off("ready error", listenerFn);
 ```
 
 _[`undefined`]_ Remove a `listener` function/object for multiple `eventType`s.
 
 ```js
-ZeroClipboard.off({
+ClipAndFile.off({
   "ready": readyListenerFn,
   "error": errorListenerFn
 });
@@ -159,45 +166,45 @@ ZeroClipboard.off({
 _[`undefined`]_ Remove a set of `eventType` to `listener` function/object mappings.
 
 ```js
-ZeroClipboard.off("ready");
+ClipAndFile.off("ready");
 ```
 
 _[`undefined`]_ Remove ALL listener functions/objects for an `eventType`.
 
 ```js
-ZeroClipboard.off();
+ClipAndFile.off();
 ```
 
 _[`undefined`]_ Remove ALL listener functions/objects for ALL registered event types.
 
 
-#### `ZeroClipboard.emit(...)`
+#### `ClipAndFile.emit(...)`
 
 ```js
-ZeroClipboard.emit("ready");
-ZeroClipboard.emit({
+ClipAndFile.emit("ready");
+ClipAndFile.emit({
   type: "error",
   name: "flash-disabled"
 });
 
-var pendingCopyData = ZeroClipboard.emit("copy");
+var pendingCopyData = ClipAndFile.emit("copy");
 ```
 
-_[`undefined`, or a Flash-friendly data Object for the `"copy"` event]_ Dispatch an event to all
+_[`undefined`, or a Flash-friendly data `Object` for the `"copy"` event]_ Dispatch an event to all
 registered listeners. The emission of some types of events will result in side effects.
 
 
-#### `ZeroClipboard.handlers()`
+#### `ClipAndFile.handlers(...)`
 
 ```js
-var listeners = ZeroClipboard.handlers("ready");
+var listeners = ClipAndFile.handlers("ready");
 ```
 
 _[`Array`]_ Retrieves a copy of the registered listener functions/objects for the given `eventType`.
 
 
 ```js
-var listeners = ZeroClipboard.handlers();
+var listeners = ClipAndFile.handlers();
 ```
 
 _[`Object`]_ Retrieves a copy of the map of registered listener functions/objects for ALL event types.
@@ -209,11 +216,11 @@ _[`Object`]_ Retrieves a copy of the map of registered listener functions/object
 #### `"ready"`
 
 The `ready` event is fired when the Flash SWF completes loading and is ready for action.  Please
-note that you need to set most configuration options [with [`ZeroClipboard.config(...)`](#zeroclipboardconfig)]
-before `ZeroClipboard.create()` is invoked.
+note that you need to set most configuration options [with [`ClipAndFile.config(...)`](#zeroclipboardconfig)]
+before `ClipAndFile.create()` is invoked.
 
 ```js
-ZeroClipboard.on("ready", function(e) {
+ClipAndFile.on("ready", function(e) {
 /*
   e = {
     type: "ready",
@@ -238,7 +245,7 @@ used for "UI prepartion" if you want to alter anything before the `copy` event f
 finished before the "copy" event is triggered.
 
 ```js
-ZeroClipboard.on("beforecopy", function(e) {
+ClipAndFile.on("beforecopy", function(e) {
 /*
   e = {
     type: "beforecopy",
@@ -255,9 +262,12 @@ ZeroClipboard.on("beforecopy", function(e) {
 #### `"copy"`
 
 On `click` (and after the `beforecopy` event), the Flash object will fire off a `copy` event. If
-the HTML object has `data-clipboard-text` or `data-clipboard-target`, then ZeroClipboard will take
-care of getting an initial set of data. It will then invoke any `copy` event handlers, in which you
-can call `event.clipboardData.setData` to set the text, which will complete the loop.
+the HTML object has `data-clipboard-text` or `data-clipboard-target`, then ClipAndFile will take
+care of putting an initial set of data on the clipboard. Alternatively, if you have specified 
+`data-clipboard-file` as well as either `data-clipboard-text`, `data-clipboard-b64`, or 
+`data-clipboard-target`, then ClipAndFile will take care of saving that data to the given file. 
+It will then invoke any `copy` event handlers, in which you can call `event.clipboardData.setData` 
+to set the clipboard data or `event.clipboardData.setFile` to set the file, which will complete the loop.  
 
 **IMPORTANT:** If a handler of this event intends to modify the pending data for clipboard
 injection, it _MUST_ operate synchronously in order to maintain the temporarily elevated
@@ -267,7 +277,7 @@ data to inject &mdash; this won't work; make it a _synchronous_ XMLHttpRequest i
 work in advance before the `copy` event is fired.
 
 ```js
-ZeroClipboard.on("copy", function(e) {
+ClipAndFile.on("copy", function(e) {
 /*
   e = {
     type: "copy",
@@ -276,8 +286,9 @@ ZeroClipboard.on("copy", function(e) {
     currentTarget: flashSwfObjectRef,
     timeStamp: Date.now(),
     clipboardData: {
-      setData: ZeroClipboard.setData,
-      clearData: ZeroClipboard.clearData
+      setData: ClipAndFile.setData,
+      setFile: ClipAndFile.setFile, 
+      clearData: ClipAndFile.clearData
     }
   };
 */
@@ -290,7 +301,7 @@ ZeroClipboard.on("copy", function(e) {
 The `aftercopy` event is fired when the text is copied [or failed to copy] to the clipboard.
 
 ```js
-ZeroClipboard.on("aftercopy", function(e) {
+ClipAndFile.on("aftercopy", function(e) {
 /*
   e = {
     type: "aftercopy",
@@ -316,13 +327,13 @@ ZeroClipboard.on("aftercopy", function(e) {
 
 #### `"destroy"`
 
-The `destroy` event is fired when `ZeroClipboard.destroy()` is invoked.
+The `destroy` event is fired when `ClipAndFile.destroy()` is invoked.
 
 **IMPORTANT:** Handlers of this event are expected to operate synchronously if they intend to be
 finished before the destruction is complete.
 
 ```js
-ZeroClipboard.on("destroy", function(e) {
+ClipAndFile.on("destroy", function(e) {
 /*
   e = {
     type: "destroy",
@@ -350,8 +361,8 @@ ZeroClipboard.on("destroy", function(e) {
 
 The `error` event is fired under a number of conditions, which will be detailed as sub-sections below.
 
-Some consumers may not consider all `error` types to be critical, and thus ZeroClipboard does not take it upon
-itself to implode by calling `ZeroClipboard.destroy()` under error conditions.  However, many consumers may
+Some consumers may not consider all `error` types to be critical, and thus ClipAndFile does not take it upon
+itself to implode by calling `ClipAndFile.destroy()` under error conditions.  However, many consumers may
 want to do just that.
 
 
@@ -360,7 +371,7 @@ want to do just that.
 This type of `error` event fires when Flash Player is either not installed or not enabled in the browser.
 
 ```js
-ZeroClipboard.on("error", function(e) {
+ClipAndFile.on("error", function(e) {
 /*
   e = {
     type: "error",
@@ -380,15 +391,15 @@ ZeroClipboard.on("error", function(e) {
 ##### `error[name = "flash-outdated"]`
 
 This type of `error` event fires when Flash Player is installed in the browser but the version is too old
-for ZeroClipboard. ZeroClipboard requires Flash Player 11.0.0 or above.
+for ClipAndFile. ClipAndFile requires Flash Player 11.0.0 or above.
 
 ```js
-ZeroClipboard.on("error", function(e) {
+ClipAndFile.on("error", function(e) {
 /*
   e = {
     type: "error",
     name: "flash-outdated",
-    messsage: "Flash is too outdated to support ZeroClipboard",
+    messsage: "Flash is too outdated to support ClipAndFile",
     target: null,
     relatedTarget: null,
     currentTarget: flashSwfObjectRef,
@@ -406,7 +417,7 @@ ZeroClipboard.on("error", function(e) {
 This type of `error` event fires when the browser's installation of Flash Player cannot communicate bidirectionally with JavaScript.
 
 ```js
-ZeroClipboard.on("error", function(e) {
+ClipAndFile.on("error", function(e) {
 /*
   e = {
     type: "error",
@@ -427,12 +438,12 @@ ZeroClipboard.on("error", function(e) {
 ##### `error[name = "flash-deactivated"]`
 
 This type of `error` event fires when the browser's installation of Flash Player is either too old
-for the browser [but _not_ too old for ZeroClipboard] or if Flash objects are configured as
+for the browser [but _not_ too old for ClipAndFile] or if Flash objects are configured as
 click-to-play and the user does not authorize it within `_globalConfig.flashLoadTimeout`
 milliseconds or does not authorize it at all.
 
 ```js
-ZeroClipboard.on("error", function(e) {
+ClipAndFile.on("error", function(e) {
 /*
   e = {
     type: "error",
@@ -462,18 +473,18 @@ one of the following situations:
     period has expired (or it may have expired before they authorized it at all).
 
 The appropriate response to this event is left up to the consumer. For instance, if they
-chose to invoke `ZeroClipboard.destroy()` in response to the earlier
+chose to invoke `ClipAndFile.destroy()` in response to the earlier
 `error[name = "flash-deactivated"]` event but then receive this `error[name = "flash-overdue"]`
-event, they may choose to "restart" their process and construct new ZeroClipboard client instances,
+event, they may choose to "restart" their process and construct new ClipAndFile client instances,
 or they may choose to just log the error to their server so they can consider increasing the
 allowed timeout duration in the future.
 
 This may be especially important for SPA or PJAX-based applications to consider as their users
 may remain on a single page for an extended period of time during which they _possibly_ could
-have enjoyed an improved experience if ZeroClipboard had been "restarted" after an initial hiccup.
+have enjoyed an improved experience if ClipAndFile had been "restarted" after an initial hiccup.
 
 ```js
-ZeroClipboard.on("error", function(e) {
+ClipAndFile.on("error", function(e) {
 /*
   e = {
     type: "error",
@@ -492,6 +503,246 @@ ZeroClipboard.on("error", function(e) {
 
 
 
+## Instance
+
+The following properties and methods are accessible via a `ClipAndFile` client instance, e.g.
+
+```js
+var clippedEl = document.getElementById("d_clip_button");
+var client = new ClipAndFile(clippedEl);
+```
+
+
+### Instance Properties
+
+#### `client.id`
+
+_[`String`]_ A unique identifier for this ClipAndFile client instance.
+
+
+### Instance Methods
+
+#### `client.destroy()`
+
+_[`undefined`]_ Remove all event handlers and unclip all clipped elements.
+
+
+#### `client.setText(...)`
+
+```js
+client.setText("Blah");
+```
+
+_[`this`]_ Set the pending `data` of type `"text/plain"` for clipboard injection.
+
+
+#### `client.setHtml(...)`
+
+```js
+client.setHtml("<b>Blah</b>");
+```
+
+_[`this`]_ Set the pending `data` of type `"text/html"` for clipboard injection.
+
+
+#### `client.setRichText(...)`
+
+```js
+client.setRichText("{\\rtf1\\ansi\n{\\b Blah}}");
+```
+
+_[`this`]_ Set the pending `data` of type `"application/rtf"` for clipboard injection.
+
+
+#### `client.setData(...)`
+
+```js
+client.setData("text/plain", "Blah");
+```
+
+_[`this`]_ Set the pending `data` of type `format` for clipboard injection.
+
+```js
+client.setData({
+  "text/plain": "Blah",
+  "text/html": "<b>Blah</b>"
+});
+```
+
+_[`this`]_ Set the pending `data` of various formats for clipboard injection. This particular
+function signature (passing in an `Object`) will implicitly clear out any existing pending data.
+
+#### `ClipAndFile.setFile(...)`
+
+```js
+client.setFile("example.txt", "Blah", false);
+```
+
+_[`undefined`]_ Set the pending `filename` with `data` and true if `b64` format for file save.
+
+
+#### `client.clearData(...)`
+
+```js
+client.clearData("text/plain");
+```
+
+_[`this`]_ Clear the pending data of type `format` for clipboard injection.
+
+```js
+client.clearData();
+```
+
+_[`this`]_ Clear the pending data of ALL formats for clipboard injection.
+
+
+#### `client.clip(...)`
+
+```js
+client.clip(document.getElementById("d_clip_button"))
+client.clip(document.querySelectorAll(".clip_button"));
+client.clip(jQuery(".clip_button"));
+```
+
+_[`this`]_ Register clipboard actions for new element(s) to the client. This includes
+automatically invoking `ClipAndFile.activate` on the current element when it is hovered over,
+unless the `autoActivate` configuration property is set to `false`.
+
+
+#### `client.unclip(...)`
+
+```js
+client.unclip(document.getElementById("d_clip_button"))
+client.unclip(document.querySelectorAll(".clip_button"));
+client.unclip(jQuery(".clip_button"));
+client.unclip();
+```
+
+_[`this`]_ Unregister the clipboard actions of previously registered element(s) on the page.
+If no elements are provided, ALL clipped/registered elements will be unregistered.
+
+
+#### `client.elements()`
+
+```js
+var els = client.elements();
+```
+
+_[`Array`]_ Get all of the elements to which this client is clipped/registered.
+
+
+#### `client.on(...)`
+
+```js
+var listenerFn = function(e) { var client = this; /* ... */ };
+client.on("ready", listenerFn);
+
+var listenerObj = {
+  handleEvent: function(e) { var listenerObj = this; /* ... */ }
+};
+client.on("error", listenerObj);
+```
+
+_[`this`]_ Add a `listener` function/object for an `eventType` within this client instance.
+
+```js
+client.on("ready error", function(e) { /* ... */ });
+```
+
+_[`this`]_ Add a `listener` function/object for multiple `eventType`s within this client instance.
+
+```js
+client.on({
+  "ready": function(e) { /* ... */ },
+  "error": function(e) { /* ... */ }
+});
+```
+
+_[`this`]_ Add a set of `eventType` to `listener` function/object mappings within this client instance.
+
+
+#### `client.off(...)`
+
+```js
+client.off("ready", listenerFn);
+client.off("error", listenerObj);
+```
+
+_[`this`]_ Remove a `listener` function/object for an `eventType` within this client instance.
+
+```js
+client.off("ready error", listenerFn);
+```
+
+_[`this`]_ Remove a `listener` function/object for multiple `eventType`s within this client instance.
+
+```js
+client.off({
+  "ready": readyListenerFn,
+  "error": errorListenerFn
+});
+```
+
+_[`this`]_ Remove a set of `eventType` to `listener` function/object mappings within this client instance.
+
+```js
+client.off("ready");
+```
+
+_[`this`]_ Remove ALL listener functions/objects for an `eventType` within this client instance.
+
+```js
+client.off();
+```
+
+_[`this`]_ Remove ALL listener functions/objects for ALL registered event types within this client instance.
+
+
+#### `client.emit(...)`
+
+```js
+client.emit("ready");
+client.emit({
+  type: "error",
+  name: "flash-disabled"
+});
+```
+
+_[`undefined`]_ Dispatch an event to all registered listeners within this client instance.
+
+
+#### `client.handlers(...)`
+
+```js
+var listeners = client.handlers("ready");
+```
+
+_[`Array`]_ Retrieves a copy of the registered listener functions/objects for the given `eventType` within this client instance.
+
+
+```js
+var listeners = client.handlers();
+```
+
+_[`Object`]_ Retrieves a copy of the map of registered listener functions/objects for ALL event types within this client instance.
+
+
+
+### Instance Events
+
+See the [Static Events](#static-events) listing.  The ClipAndFile client instances regurgitate the `ClipAndFile.Core` events, ONLY if the event is NOT impertinent to this particular client.  The only difference is that the clients' event dispatching will update the `event` object to include a `client` property that references the relevant client instance, e.g.:
+
+```js
+var client = new ClipAndFile();
+client.on("ready", function(e) {
+  if (e.client === client && client === this) {
+    console.log("This client instance is ready!");
+  }
+});
+```
+
+
+
 ## Configuration Options
 
 These are default values for the global configurations options. You should generally update these _before_ you create your clients.
@@ -499,8 +750,8 @@ These are default values for the global configurations options. You should gener
 ```js
 var _globalConfig = {
 
-  // SWF URL, relative to the page. Default value will be "ZeroClipboard.swf"
-  // under the same path as the ZeroClipboard JS file.
+  // SWF URL, relative to the page. Default value will be "ClipAndFile.swf"
+  // under the same path as the ClipAndFile JS file.
   swfPath: _swfPath,
 
   // SWF inbound scripting policy: page domains that the SWF should trust.
@@ -519,7 +770,7 @@ var _globalConfig = {
   // how long it takes to load the SWF, you can set this to `null`.
   flashLoadTimeout: 30000,
 
-  // Setting this to `false` would allow users to handle calling `ZeroClipboard.activate(...);`
+  // Setting this to `false` would allow users to handle calling `ClipAndFile.activate(...);`
   // themselves instead of relying on our per-element `mouseover` handler.
   autoActivate: true,
 
@@ -561,7 +812,7 @@ var _globalConfig = {
 };
 ```
 
-You can override the defaults by making a call like `ZeroClipboard.config({ swfPath: "new/path" });` before you create any clients.
+You can override the defaults by making a call like `ClipAndFile.config({ swfPath: "new/path" });` before you create any clients.
 
 
 ### SWF Inbound Scripting Access: The `trustedDomains` option
@@ -569,7 +820,7 @@ You can override the defaults by making a call like `ZeroClipboard.config({ swfP
 This allows other SWF files and HTML pages from the allowed domains to access/call publicly exposed ActionScript code,
 e.g. functions shared via `ExternalInterface.addCallback`. In other words, it controls the SWF inbound scripting access.
 
-If your ZeroClipboard SWF is served from a different origin/domain than your page, you need to tell the SWF that it's
+If your ClipAndFile SWF is served from a different origin/domain than your page, you need to tell the SWF that it's
 OK to trust your page. The default value of `[window.location.host]` is almost _**always**_ what you will want unless
 you specifically want the SWF to communicate with pages from other domains (e.g. in `iframe`s or child windows).
 
@@ -591,81 +842,9 @@ For more information about `allowScriptAccess`, consult the [_official Flash doc
 
 ### Cross-Protocol Limitations
 
-ZeroClipboard was intentionally configured to _not_ allow the SWF to be served from a secure domain (HTTPS) but scripted by an insecure domain (HTTP).
+ClipAndFile was intentionally configured to _not_ allow the SWF to be served from a secure domain (HTTPS) but scripted by an insecure domain (HTTP).
 
-If you find yourself in this situation (as in [Issue #170](https://github.com/zeroclipboard/ZeroClipboard/issues/170)), please consider the following options:  
- 1. Serve the SWF over HTTP instead of HTTPS. If the page's protocol can vary (e.g. authorized/unauthorized, staging/production, etc.), you should include add the SWF with a relative protocol (`//s3.amazonaws.com/blah/ZeroClipboard.swf`) instead of an absolute protocol (`https://s3.amazonaws.com/blah/ZeroClipboard.swf`).
+If you find yourself in this situation (as in [Issue #170](https://github.com/zeroclipboard/ClipAndFile/issues/170)), please consider the following options:  
+ 1. Serve the SWF over HTTP instead of HTTPS. If the page's protocol can vary (e.g. authorized/unauthorized, staging/production, etc.), you should include add the SWF with a relative protocol (`//s3.amazonaws.com/blah/ClipAndFile.swf`) instead of an absolute protocol (`https://s3.amazonaws.com/blah/ClipAndFile.swf`).
  2. Serve the page over HTTPS instead of HTTP. If the page's protocol can vary, see the note on the previous option (1).
- 3. Update ZeroClipboard's ActionScript codebase to call the [`allowInsecureDomain`](http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/system/Security.html#allowInsecureDomain\(\)) method, then recompile the SWF with your custom changes.
-
-
-
-## Extending `ZeroClipboard`
-
-For developers who want to wrap ZeroClipboard into a 3rd party plugin
-(e.g. [JamesMGreene/jquery.zeroclipboard](https://github.com/JamesMGreene/jquery.zeroclipboard)), here
-are the important extension points:
-
-
-### Constructor
-
-Although the root `ZeroClipboard` function itself is actually a constructor, it also contains a
-particular hook that checks for the existence of a `ZeroClipboard._createClient` static function
-and invokes it with `this` (the freshly created `ZeroClipboard` instance) as the context and passes
-along all provided arguments to the constructor function, e.g.:
-
-```js
-var counterId = 0;
-ZeroClipboard._createClient = function(elements, otherStuff, etc) {
-  this.id = "" + (counterId++);
-  /* ... */
-};
-
-var $elementsToOperateOn = $(".clip_button");
-
-var client = new ZeroClipboard($elementsToOperateOn);
-```
-
-
-### Prototype Chain
-
-Using the `ZeroClipboard` constructor will allow you to also extend the underlying prototype with
-new instance-based methods, e.g.:
-
-```js
-ZeroClipboard.prototype.clientEmitOrSomeOtherOperationToInvoke = function(e) {
-  e.client = this;
-};
-```
-
-
-### Eventing
-
-Most clients will want to listen for some or all of the `ZeroClipboard.Core` events, and some
-clients will even want to regurgitate the same events to their own client-based listeners. To
-make the latter easier, `ZeroClipboard.Core` will also allow you to add a listener to an
-`eventType` of `"*"`, e.g.:
-
-```js
-ZeroClipboard._createClient = function() {
-  var client = this;
-  ZeroClipboard.on("*", function(e) {
-    client.clientEmitOrSomeOtherOperationToInvoke(e);
-  });
-};
-```
-
-
-### Static Extension
-
-The `ZeroClipboard.Core` API is composed of static methods stored as properties of the
-root `ZeroClipboard` function. As such, additional static methods can be added as desired, if there
-is any actual benefit to doing so, e.g.:
-
-```js
-ZeroClipboard.log = function() {
-  if (typeof console !== "undefined" && console.log) {
-    console.log.apply(console, Array.prototype.slice.call(arguments, 0));
-  }
-};
-```
+ 3. Update ClipAndFile's ActionScript codebase to call the [`allowInsecureDomain`](http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/system/Security.html#allowInsecureDomain\(\)) method, then recompile the SWF with your custom changes.

@@ -1,4 +1,4 @@
-/*global ZeroClipboard, _globalConfig:true, _flashState, _clipData, _clipDataFormatMap, _deleteOwnProperties, _objectKeys */
+/*global ClipAndFile, _globalConfig:true, _flashState, _clipData, _clipDataFormatMap, _deleteOwnProperties, _objectKeys */
 
 (function(module, test) {
   "use strict";
@@ -6,7 +6,7 @@
   // Helper functions
   var TestUtils = {
     getHtmlBridge: function() {
-      return document.getElementById("global-zeroclipboard-html-bridge");
+      return document.getElementById("global-clipandfile-html-bridge");
     }
   };
 
@@ -20,23 +20,23 @@
     assert.expect(8);
 
     // Act
-    var result = ZeroClipboard.state();
+    var result = ClipAndFile.state();
 
     // Assert
-    assert.deepEqual(_objectKeys(result), ["browser", "flash", "zeroclipboard"], "Has all expected keys");
+    assert.deepEqual(_objectKeys(result), ["browser", "flash", "clipandfile"], "Has all expected keys");
     assert.strictEqual(typeof result.browser, "object", ".browser is an object");
     assert.notStrictEqual(result.browser, null, ".browser is a non-null object");
     assert.strictEqual(typeof result.flash, "object", ".flash is an object");
     assert.notStrictEqual(result.flash, null, ".flash is a non-null object");
-    assert.strictEqual(typeof result.zeroclipboard, "object", ".zeroclipboard is an object");
-    assert.notStrictEqual(result.zeroclipboard, null, ".zeroclipboard is a non-null object");
-    assert.deepEqual(_objectKeys(result.zeroclipboard), ["version", "config"], ".zeroclipboard has all expected keys");
+    assert.strictEqual(typeof result.clipandfile, "object", ".clipandfile is an object");
+    assert.notStrictEqual(result.clipandfile, null, ".clipandfile is a non-null object");
+    assert.deepEqual(_objectKeys(result.clipandfile), ["version", "config"], ".clipandfile has all expected keys");
   });
 
 
   module("core/api.js unit tests - config", {
     setup: function() {
-      originalConfig = ZeroClipboard.config();
+      originalConfig = ClipAndFile.config();
     },
     teardown: function() {
       _globalConfig = originalConfig;
@@ -56,10 +56,10 @@
     // This is, for the record, a totally incorrect path due to being the development
     // file structure but it IS the correct URL based on calculated assumption of using
     // the built distributable versions of the library
-    var swfPathBasedOnStateJsPath = rootPath + "src/js/core/ZeroClipboard.swf";
+    var swfPathBasedOnStateJsPath = rootPath + "src/js/core/ClipAndFile.swf";
 
     // Test that the client has the expected default URL [even if it's not correct]
-    assert.strictEqual(ZeroClipboard.config("swfPath"), swfPathBasedOnStateJsPath);
+    assert.strictEqual(ClipAndFile.config("swfPath"), swfPathBasedOnStateJsPath);
   });
 
 
@@ -73,14 +73,14 @@
 
     // Assert, act, assert
     // Test that the client has the default value
-    assert.deepEqual(ZeroClipboard.config("trustedDomains"), originalValue);
-    assert.deepEqual(ZeroClipboard.config().trustedDomains, originalValue);
+    assert.deepEqual(ClipAndFile.config("trustedDomains"), originalValue);
+    assert.deepEqual(ClipAndFile.config().trustedDomains, originalValue);
     // Change the value
-    var updatedConfig = ZeroClipboard.config({ trustedDomains: updatedValue });
+    var updatedConfig = ClipAndFile.config({ trustedDomains: updatedValue });
     // Test that the client has the changed value
     assert.deepEqual(updatedConfig.trustedDomains, updatedValue);
-    assert.deepEqual(ZeroClipboard.config("trustedDomains"), updatedValue);
-    assert.deepEqual(ZeroClipboard.config().trustedDomains, updatedValue);
+    assert.deepEqual(ClipAndFile.config("trustedDomains"), updatedValue);
+    assert.deepEqual(ClipAndFile.config().trustedDomains, updatedValue);
   });
 
 
@@ -88,7 +88,7 @@
     assert.expect(2);
 
     // Arrange
-    var _swfPath = ZeroClipboard.config("swfPath");
+    var _swfPath = ClipAndFile.config("swfPath");
     var expectedBefore = {
       swfPath: _swfPath,
       trustedDomains: window.location.host ? [window.location.host] : [],
@@ -96,11 +96,11 @@
       forceEnhancedClipboard: false,
       flashLoadTimeout: 30000,
       autoActivate: true,
-      containerId: "global-zeroclipboard-html-bridge",
-      containerClass: "global-zeroclipboard-container",
-      swfObjectId: "global-zeroclipboard-flash-bridge",
-      hoverClass: "zeroclipboard-is-hover",
-      activeClass: "zeroclipboard-is-active",
+      containerId: "global-clipandfile-html-bridge",
+      containerClass: "global-clipandfile-container",
+      swfObjectId: "global-clipandfile-flash-bridge",
+      hoverClass: "clipandfile-is-hover",
+      activeClass: "clipandfile-is-active",
 
       // These configuration values CAN be modified while a SWF is actively embedded.
       bubbleEvents: true,
@@ -115,11 +115,11 @@
       forceEnhancedClipboard: false,
       flashLoadTimeout: 30000,
       autoActivate: true,
-      containerId: "global-zeroclipboard-html-bridge",
-      containerClass: "global-zeroclipboard-container",
-      swfObjectId: "global-zeroclipboard-flash-bridge",
-      hoverClass: "zeroclipboard-is-hover",
-      activeClass: "zeroclipboard-is-active",
+      containerId: "global-clipandfile-html-bridge",
+      containerClass: "global-clipandfile-container",
+      swfObjectId: "global-clipandfile-flash-bridge",
+      hoverClass: "clipandfile-is-hover",
+      activeClass: "clipandfile-is-active",
 
       // These configuration values CAN be modified while a SWF is actively embedded.
       bubbleEvents: false,
@@ -129,11 +129,11 @@
     };
 
     // Act
-    var actualBefore = ZeroClipboard.config();
+    var actualBefore = ClipAndFile.config();
 
     _flashState.bridge = {};
 
-    var actualAfter = ZeroClipboard.config({
+    var actualAfter = ClipAndFile.config({
       swfPath: "/path/to/test.swf",
       trustedDomains: ["test.domain.com"],
       cacheBust: false,
@@ -172,13 +172,13 @@
     // Assert, Act, repeat ad nauseam
     assert.deepEqual(_clipData, {}, "`_clipData` is empty");
 
-    ZeroClipboard.setData("text/plain", "zc4evar");
+    ClipAndFile.setData("text/plain", "zc4evar");
     assert.deepEqual(_clipData, { "text/plain": "zc4evar" }, "`_clipData` contains expected text");
 
-    ZeroClipboard.setData("text/x-markdown", "**ZeroClipboard**");
-    assert.deepEqual(_clipData, { "text/plain": "zc4evar", "text/x-markdown": "**ZeroClipboard**" }, "`_clipData` contains expected text and custom format");
+    ClipAndFile.setData("text/x-markdown", "**ClipAndFile**");
+    assert.deepEqual(_clipData, { "text/plain": "zc4evar", "text/x-markdown": "**ClipAndFile**" }, "`_clipData` contains expected text and custom format");
 
-    ZeroClipboard.setData({ "text/html": "<b>Win</b>" });
+    ClipAndFile.setData({ "text/html": "<b>Win</b>" });
     assert.deepEqual(_clipData, { "text/html": "<b>Win</b>" }, "`_clipData` contains expected HTML and cleared out old data because an object was passed in");
   });
 
@@ -192,22 +192,22 @@
     // Arrange & Assert
     _clipData["text/plain"] = "zc4evar";
     _clipData["text/html"] = "<b>Win</b>";
-    _clipData["text/x-markdown"] = "**ZeroClipboard**";
+    _clipData["text/x-markdown"] = "**ClipAndFile**";
     assert.deepEqual(_clipData, {
       "text/plain": "zc4evar",
       "text/html": "<b>Win</b>",
-      "text/x-markdown": "**ZeroClipboard**"
+      "text/x-markdown": "**ClipAndFile**"
     }, "`_clipData` contains all expected data");
 
     // Act & Assert
-    ZeroClipboard.clearData("text/html");
+    ClipAndFile.clearData("text/html");
     assert.deepEqual(_clipData, {
       "text/plain": "zc4evar",
-      "text/x-markdown": "**ZeroClipboard**"
+      "text/x-markdown": "**ClipAndFile**"
     }, "`_clipData` had 'text/html' successfully removed");
 
     // Act & Assert
-    ZeroClipboard.clearData();
+    ClipAndFile.clearData();
     assert.deepEqual(_clipData, {}, "`_clipData` had all data successfully removed");
   });
 
@@ -215,16 +215,16 @@
   module("core/api.js unit tests - flash", {
     setup: function() {
       // Store
-      originalFlashDetect = ZeroClipboard.isFlashUnusable;
+      originalFlashDetect = ClipAndFile.isFlashUnusable;
       // Modify
-      ZeroClipboard.isFlashUnusable = function() {
+      ClipAndFile.isFlashUnusable = function() {
         return false;
       };
     },
     teardown: function() {
       // Restore
-      ZeroClipboard.isFlashUnusable = originalFlashDetect;
-      ZeroClipboard.destroy();
+      ClipAndFile.isFlashUnusable = originalFlashDetect;
+      ClipAndFile.destroy();
     }
   });
 
@@ -233,15 +233,15 @@
     assert.expect(2);
 
     // Arrange
-    ZeroClipboard.isFlashUnusable = function() {
+    ClipAndFile.isFlashUnusable = function() {
       return false;
     };
-    ZeroClipboard.create();
+    ClipAndFile.create();
 
     // Assert, act, assert
     assert.strictEqual(_flashState.ready, false);
     // `emit`-ing event handlers are async (generally) but the internal `ready` state is set synchronously
-    ZeroClipboard.emit("ready");
+    ClipAndFile.emit("ready");
     assert.strictEqual(_flashState.ready, true);
   });
 
@@ -251,16 +251,16 @@
 
     // Arrange
     var currentEl = document.getElementById("d_clip_button");
-    ZeroClipboard.create();
+    ClipAndFile.create();
 
     // Act
-    ZeroClipboard.activate(currentEl);
+    ClipAndFile.activate(currentEl);
 
     // Assert
     assert.strictEqual(TestUtils.getHtmlBridge().getAttribute("title"), "Click me to copy to clipboard.");
 
     // Revert
-    ZeroClipboard.deactivate();
+    ClipAndFile.deactivate();
   });
 
 
@@ -269,16 +269,16 @@
 
     // Arrange
     var currentEl = document.getElementById("d_clip_button_no_title");
-    ZeroClipboard.create();
+    ClipAndFile.create();
 
     // Act
-    ZeroClipboard.activate(currentEl);
+    ClipAndFile.activate(currentEl);
 
     // Assert
     assert.ok(!TestUtils.getHtmlBridge().getAttribute("title"));
 
     // Revert
-    ZeroClipboard.deactivate();
+    ClipAndFile.deactivate();
   });
 
 
@@ -287,11 +287,11 @@
 
     // Arrange
     var currentEl = document.getElementById("d_clip_button");
-    ZeroClipboard.create();
+    ClipAndFile.create();
 
     // Act
-    ZeroClipboard.activate(currentEl);
-    var pendingText = ZeroClipboard.emit("copy");
+    ClipAndFile.activate(currentEl);
+    var pendingText = ClipAndFile.emit("copy");
 
     // Assert
     assert.deepEqual(_clipData, { "text/plain": "Copy me!" });
@@ -299,7 +299,7 @@
     assert.deepEqual(_clipDataFormatMap, { "text": "text/plain" });
 
     // Revert
-    ZeroClipboard.deactivate();
+    ClipAndFile.deactivate();
   });
 
 
@@ -316,11 +316,11 @@
       "cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\n"+
       "proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 
-    ZeroClipboard.create();
+    ClipAndFile.create();
 
     // Act
-    ZeroClipboard.activate(currentEl);
-    var pendingText = ZeroClipboard.emit("copy");
+    ClipAndFile.activate(currentEl);
+    var pendingText = ClipAndFile.emit("copy");
 
     // Assert
     assert.strictEqual(_clipData["text/plain"].replace(/\r\n/g, "\n"), expectedText);
@@ -328,7 +328,7 @@
     assert.deepEqual(_clipDataFormatMap, { "text": "text/plain" });
 
     // Revert
-    ZeroClipboard.deactivate();
+    ClipAndFile.deactivate();
   });
 
 
@@ -354,11 +354,11 @@
       "proident, sunt in culpa qui officia deserunt mollit anim id est laborum."+
       "</pre>";
 
-    ZeroClipboard.create();
+    ClipAndFile.create();
 
     // Act
-    ZeroClipboard.activate(currentEl);
-    var pendingText =  ZeroClipboard.emit("copy");
+    ClipAndFile.activate(currentEl);
+    var pendingText =  ClipAndFile.emit("copy");
 
     // Assert
     assert.strictEqual(_clipData["text/plain"].replace(/\r\n/g, "\n"), expectedText);
@@ -378,7 +378,7 @@
     assert.deepEqual(_clipDataFormatMap, { "text": "text/plain", "html": "text/html" });
 
     // Revert
-    ZeroClipboard.deactivate();
+    ClipAndFile.deactivate();
   });
 
 
@@ -387,11 +387,11 @@
 
     // Arrange
     var currentEl = document.getElementById("d_clip_button_input_text");
-    ZeroClipboard.create();
+    ClipAndFile.create();
 
     // Act
-    ZeroClipboard.activate(currentEl);
-    var pendingText = ZeroClipboard.emit("copy");
+    ClipAndFile.activate(currentEl);
+    var pendingText = ClipAndFile.emit("copy");
 
     // Assert
     assert.deepEqual(_clipData, { "text/plain": "Clipboard Text" });
@@ -399,7 +399,7 @@
     assert.deepEqual(_clipDataFormatMap, { "text": "text/plain" });
 
     // Revert
-    ZeroClipboard.deactivate();
+    ClipAndFile.deactivate();
   });
 
 
@@ -408,16 +408,16 @@
 
     // Arrange
     var currentEl = document.getElementById("d_clip_button_no_text");
-    ZeroClipboard.create();
+    ClipAndFile.create();
 
     // Act
-    ZeroClipboard.activate(currentEl);
+    ClipAndFile.activate(currentEl);
 
     // Assert
     assert.ok(!TestUtils.getHtmlBridge().getAttribute("data-clipboard-text"));
 
     // Revert
-    ZeroClipboard.deactivate();
+    ClipAndFile.deactivate();
   });
 
 
@@ -426,10 +426,10 @@
 
     // Arrange
     var currentEl = document.getElementById("d_clip_button");
-    ZeroClipboard.create();
+    ClipAndFile.create();
 
     // Act
-    ZeroClipboard.activate(currentEl);
+    ClipAndFile.activate(currentEl);
 
     // Assert
     assert.strictEqual(/^-?[0-9\.]+px$/.test(TestUtils.getHtmlBridge().style.top), true);

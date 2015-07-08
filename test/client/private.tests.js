@@ -1,4 +1,4 @@
-/*global ZeroClipboard, _clientConstructor, _clientClip, _clientShouldEmit */
+/*global ClipAndFile, _clientConstructor, _clientClip, _clientShouldEmit */
 
 (function(module, test) {
   "use strict";
@@ -10,7 +10,7 @@
 
     // Arrange
     var currentEl = document.getElementById("d_clip_button");
-    var client = new ZeroClipboard();
+    var client = new ClipAndFile();
     _clientConstructor.call(client);
 
     // Act

@@ -1,4 +1,4 @@
-/*global ZeroClipboard */
+/*global ClipAndFile */
 
 (function(module, test) {
   "use strict";
@@ -6,28 +6,28 @@
   // Helper functions
   var TestUtils = {
     getHtmlBridge: function() {
-      return document.getElementById(ZeroClipboard.config("containerId"));
+      return document.getElementById(ClipAndFile.config("containerId"));
     }
   };
 
   var originalConfig, originalFlashDetect;
 
 
-  module("ZeroClipboard.Core.js (built) unit tests", {
+  module("ClipAndFile.Core.js (built) unit tests", {
     setup: function() {
       // Store
-      originalConfig = ZeroClipboard.config();
-      originalFlashDetect = ZeroClipboard.isFlashUnusable;
+      originalConfig = ClipAndFile.config();
+      originalFlashDetect = ClipAndFile.isFlashUnusable;
       // Modify
-      ZeroClipboard.isFlashUnusable = function() {
+      ClipAndFile.isFlashUnusable = function() {
         return false;
       };
     },
     teardown: function() {
       // Restore
-      ZeroClipboard.destroy();
-      ZeroClipboard.config(originalConfig);
-      ZeroClipboard.isFlashUnusable = originalFlashDetect;
+      ClipAndFile.destroy();
+      ClipAndFile.config(originalConfig);
+      ClipAndFile.isFlashUnusable = originalFlashDetect;
     }
   });
 
@@ -40,11 +40,11 @@
     var indexOfTest = window.location.pathname.toLowerCase().indexOf("/test/");
     var rootDir = window.location.pathname.slice(1, indexOfTest + 1);
     var rootPath = rootOrigin + rootDir;
-    //var zcJsUrl = rootPath + "dist/ZeroClipboard.Core.js";
-    var swfPathBasedOnZeroClipboardJsPath = rootPath + "dist/ZeroClipboard.swf";
+    //var cafJsUrl = rootPath + "dist/ClipAndFile.Core.js";
+    var swfPathBasedOnClipAndFileJsPath = rootPath + "dist/ClipAndFile.swf";
 
     // Test that the client has the expected default URL [even if it's not correct]
-    assert.strictEqual(ZeroClipboard.config("swfPath"), swfPathBasedOnZeroClipboardJsPath);
+    assert.strictEqual(ClipAndFile.config("swfPath"), swfPathBasedOnClipAndFileJsPath);
   });
 
 
@@ -52,15 +52,15 @@
     assert.expect(3);
 
     // Arrange
-    ZeroClipboard.isFlashUnusable = function() {
+    ClipAndFile.isFlashUnusable = function() {
       return false;
     };
 
     // Assert, arrange, assert, act, assert
     assert.equal(TestUtils.getHtmlBridge(), null, "The bridge does not exist before creating a client");
-    ZeroClipboard.create();
+    ClipAndFile.create();
     assert.notEqual(TestUtils.getHtmlBridge(), null, "The bridge does exist after creating a client");
-    ZeroClipboard.destroy();
+    ClipAndFile.destroy();
     assert.equal(TestUtils.getHtmlBridge(), null, "The bridge does not exist after calling `destroy`");
   });
 

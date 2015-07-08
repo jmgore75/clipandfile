@@ -13,14 +13,14 @@ package {
     import flash.net.FileReference;
 
 	/**
-	 * The ZeroClipboard class creates a simple Sprite button that will put
-	 * text in the user's clipboard when clicked.
+	 * The ClipAndFile class creates a simple Sprite button that will put
+	 * text in the user's clipboard or save a file when clicked.
 	 */
 	[SWF(widthPercent = "100%", heightPercent = "100%", backgroundColor = "#FFFFFF")]
-	public class ZeroClipboard extends Sprite {
+	public class ClipAndFile extends Sprite {
 		/**
 		 * Function through which JavaScript events are emitted. Accounts for scenarios
-		 * in which ZeroClipboard is used via AMD/CommonJS module loaders, too.
+		 * in which ClipAndFile is used via AMD/CommonJS module loaders, too.
 		 */
 		private var jsEmitter : String = null;
 
@@ -37,7 +37,7 @@ package {
 		/**
 		 * @constructor
 		 */
-		public function ZeroClipboard() {
+		public function ClipAndFile() {
 			// The JIT Compiler does not compile constructors, so ANY
 			// cyclomatic complexity higher than 1 is discouraged.
 			this.ctor();
@@ -72,7 +72,7 @@ package {
 			flashvars = XssUtils.filterToFlashVars(this.loaderInfo.parameters);
 
 			// Configure the SWF object's ID
-			var swfObjectId : String = "global-zeroclipboard-flash-bridge";
+			var swfObjectId : String = "global-clipandfile-flash-bridge";
 			if (flashvars.swfObjectId && typeof flashvars.swfObjectId === "string") {
 				var swfId = XssUtils.sanitizeString(flashvars.swfObjectId);
 
@@ -99,17 +99,17 @@ package {
 				"  var objectId = '" + swfObjectId + "',\n" +
 				"      ZC = null,\n" +
 				"      swf = null;\n" +
-				"  if (typeof ZeroClipboard === 'function' && typeof ZeroClipboard.emit === 'function') {\n" +
-				"    \nZC = ZeroClipboard;\n" +
+				"  if (typeof ClipAndFile === 'function' && typeof ClipAndFile.emit === 'function') {\n" +
+				"    \nZC = ClipAndFile;\n" +
 				"  }\n" +
 				"  else {\n" +
 				"    swf = document[objectId] || document.getElementById(objectId);\n" +
-				"    if (swf && typeof swf.ZeroClipboard === 'function' && typeof swf.ZeroClipboard.emit === 'function') {\n" +
-				"      ZC = swf.ZeroClipboard;\n" +
+				"    if (swf && typeof swf.ClipAndFile === 'function' && typeof swf.ClipAndFile.emit === 'function') {\n" +
+				"      ZC = swf.ClipAndFile;\n" +
 				"    }\n" +
 				"  }\n" +
 				"  if (!ZC) {\n" +
-				"    throw new Error('ERROR: ZeroClipboard SWF could not locate ZeroClipboard JS object!\\n" +
+				"    throw new Error('ERROR: ClipAndFile SWF could not locate ClipAndFile JS object!\\n" +
 				"Expected element ID: ' + objectId);\n" +
 				"  }\n" +
 				"  return ZC.emit(eventObj);\n" +

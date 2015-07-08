@@ -1,11 +1,10 @@
 # WARNING
-**This `master` branch contains the v2.x codebase for ZeroClipboard, which is currently in an unstable state! If you
-want to see the v1.x codebase, please see the [`1.x-master`](https://github.com/zeroclipboard/zeroclipboard/tree/1.x-master) branch instead.**
+**This `ieCompatibility` branch contains a modified version of the v2.0.2 codebase for ZeroClipboard.  It is primarily intended to support IE in compatibility view, with additional features.  Please see [`ZeroClipboard`](https://github.com/zeroclipboard/zeroclipboard) for the original.**
 
 
 # Overview
 
-The ZeroClipboard library provides an easy way to copy text to the clipboard using an invisible [Adobe Flash](http://en.wikipedia.org/wiki/Adobe_Flash) movie and a [JavaScript](http://en.wikipedia.org/wiki/JavaScript) interface. The "Zero" signifies that the library is invisible and the user interface is left entirely up to you. 
+The ClipAndFile library provides an easy way to copy text to the clipboard or save a file using an invisible [Adobe Flash](http://en.wikipedia.org/wiki/Adobe_Flash) movie and a [JavaScript](http://en.wikipedia.org/wiki/JavaScript) interface. The the user interface is left entirely up to you. 
 
 This is achieved by automatically floating the invisible movie on top of a [DOM](http://en.wikipedia.org/wiki/Document_Object_Model) element of your choice. Standard mouse events are even propagated out to your DOM element, so you can still have rollover and mousedown effects.
 
@@ -15,49 +14,20 @@ This is achieved by automatically floating the invisible movie on top of a [DOM]
 Note that, due to browser and Flash security restrictions, this clipboard injection can _**ONLY**_ occur when the user clicks on the invisible Flash movie. A simulated `click` event from JavaScript will not suffice as this would enable [clipboard poisoning](http://www.computerworld.com/s/article/9117268/Adobe_patches_Flash_clickjacking_and_clipboard_poisoning_bugs).
 
 
-## Installation
-
-### [NPM](https://www.npmjs.org/)
-
-```shell
-npm install zeroclipboard
-```
-
-### [Bower](http://bower.io/)
-
-```shell
-bower install zeroclipboard
-```
-
-### [SPM](http://spmjs.io/)
-
-```shell
-spm install zeroclipboard
-```
-
-### [PHP Composer](https://getcomposer.org/)
-
-For any PHP Composer users, ZeroClipboard is also [available on Packagist](https://packagist.org/packages/zeroclipboard/zeroclipboard).
-
-### [Ruby Gem](https://rubygems.org/)
-
-For any Rails users, the [`zeroclipboard-rails` Ruby Gem](https://rubygems.org/gems/zeroclipboard-rails) is available to automatically add ZeroClipboard into your Rails asset pipeline.
-
-
 ## Setup
 
 To use the library, simply include the following JavaScript file in your page:
 
 ```html
-<script type="text/javascript" src="ZeroClipboard.js"></script>
+<script type="text/javascript" src="ClipAndFile.js"></script>
 ```
 
-You also need to have the "`ZeroClipboard.swf`" file available to the browser.  If this file is located in the same
+You also need to have the "`ClipAndFile.swf`" file available to the browser.  If this file is located in the same
 directory as your web page, then it will work out of the box.  However, if the SWF file is hosted elsewhere, you need
 to set the URL like this (place this code _after_ the script tag):
 
 ```js
-ZeroClipboard.config( { swfPath: 'http://YOURSERVER/path/ZeroClipboard.swf' } );
+ClipAndFile.config( { swfPath: 'http://YOURSERVER/path/ClipAndFile.swf' } );
 ```
 
 
@@ -67,31 +37,31 @@ Now you are ready to create one or more _clients_.  A client is a single instanc
 linked to one or more DOM elements. Here is how to create a client instance:
 
 ```js
-var client = new ZeroClipboard();
+var client = new ClipAndFile();
 ```
 
 You can also include an element or array of elements in the new client. _\*\*This example uses jQuery to find "copy buttons"._
 
 ```js
-var client = new ZeroClipboard($(".copy-button"));
+var client = new ClipAndFile($(".copy-button"));
 ```
 
 
 ## API
 
-For the full API documentation, see [api/ZeroClipboard.md](api/ZeroClipboard.md). The full set of
-[Configuration Options](api/ZeroClipboard.md#configuration-options) are also documented there.
+For the full API documentation, see [api/ClipAndFile.md](api/ClipAndFile.md). The full set of
+[Configuration Options](api/ClipAndFile.md#configuration-options) are also documented there.
 
-For developers who want to wrap ZeroClipboard into a 3rd party plugin
-(e.g. [JamesMGreene/jquery.zeroclipboard](https://github.com/JamesMGreene/jquery.zeroclipboard)),
-see the [api/ZeroClipboard.Core.md](api/ZeroClipboard.Core.md) documentation instead.
+For developers who want to wrap ClipAndFile into a 3rd party plugin
+(e.g. [JamesMGreene/jquery.clipandfile](https://github.com/JamesMGreene/jquery.clipandfile)),
+see the [api/ClipAndFile.Core.md](api/ClipAndFile.Core.md) documentation instead.
 
 
 ### Text To Copy
 
 Setting the clipboard text can be done in 4 ways:
 
-1. Add a `copy` event handler in which you call `event.clipboardData.setData` to set the appropriate data. This event is triggered every time ZeroClipboard tries to inject into the clipboard. Example:
+1. Add a `copy` event handler in which you call `event.clipboardData.setData` to set the appropriate data. This event is triggered every time ClipAndFile tries to act. Example:
 
    ```js
    client.on( "copy", function (event) {
@@ -102,7 +72,7 @@ Setting the clipboard text can be done in 4 ways:
    });
    ```
 
-2. Set the "text/plain" [and _usually_ "text/html"] clipboard segments via `data-clipboard-target` attribute on the button. ZeroClipboard will look for the target element via ID and try to get the HTML value via `.value`, `.outerHTML`, or `.innerHTML`, and the text value via `.value`, `.textContent`, or `.innerText`. If the HTML and text values for the targeted element match, the value will only be placed into the "text/plain" segment of the clipboard (i.e. the "text/html" segment will cleared).
+2. Set the "text/plain" [and _usually_ "text/html"] clipboard segments via `data-clipboard-target` attribute on the button. ClipAndFile will look for the target element via ID and try to get the HTML value via `.value`, `.outerHTML`, or `.innerHTML`, and the text value via `.value`, `.textContent`, or `.innerText`. If the HTML and text values for the targeted element match, the value will only be placed into the "text/plain" segment of the clipboard (i.e. the "text/html" segment will cleared).
 
   ```html
   <button id="my-button_text" data-clipboard-target="clipboard_text">Copy to Clipboard</button>
@@ -124,20 +94,20 @@ Setting the clipboard text can be done in 4 ways:
   proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</pre>
   ```
 
-3. Set the "text/plain" clipboard segment via `data-clipboard-text` attribute on the button. Doing this will let ZeroClipboard take care of the rest.
+3. Set the "text/plain" clipboard segment via `data-clipboard-text` attribute on the button. Doing this will let ClipAndFile take care of the rest.
 
   ```html
   <button id="my-button" data-clipboard-text="Copy me!">Copy to Clipboard</button>
   ```
 
-4. Set the data via the `ZeroClipboard.setData` (any segment) method.  You can call this function at any time: when the page first loads, or later like in a `copy` event handler.  Example:
+4. Set the data via the `ClipAndFile.setData` (any segment) method.  You can call this function at any time: when the page first loads, or later like in a `copy` event handler.  Example:
 
   ```js
-  ZeroClipboard.setData( "text/plain", "Copy me!" );
+  ClipAndFile.setData( "text/plain", "Copy me!" );
   ```
 
-  The important caveat of using `ZeroClipboard.setData` is that the data it sets is **transient** and _will only be used for a single copy operation_. As such, we do not particularly
-  recommend using `ZeroClipboard.setData` (and friends) other than inside of a `copy` event handler; however, the API will not prevent you from using it in other ways.
+  The important caveat of using `ClipAndFile.setData` is that the data it sets is **transient** and _will only be used for a single copy operation_. As such, we do not particularly
+  recommend using `ClipAndFile.setData` (and friends) other than inside of a `copy` event handler; however, the API will not prevent you from using it in other ways.
 
 5. Set the data via the `client.setText` ("text/plain" segment), `client.setHtml` ("text/html" segment), `client.setRichText` ("application/rtf" segment), or `client.setData` (any segment) methods.  You can call this function at any time: when the page first loads, or later like in a `copy` event handler.  Example:
 
@@ -147,6 +117,57 @@ Setting the clipboard text can be done in 4 ways:
 
   The important caveat of using `client.setData` (and friends) is that the data it sets is **transient** and _will only be used for a single copy operation_. As such, we do not particularly
   recommend using `client.setData` (and friends) other than inside of a `copy` event handler; however, the API will not prevent you from using it in other ways.
+
+
+### Saving to file
+
+Saving a file can be done in 4 ways:
+
+1. Add a `copy` event handler in which you call `event.clipboardData.setFile` to set the appropriate data for file save. This event is triggered every time ClipAndFile tries to act. Example:
+
+   ```js
+   client.on( "copy", function (event) {
+      var clipboard = event.clipboardData;
+      clipboard.setFile( "text/plain", "Save me!", "example.txt", false);
+   });
+   ```
+
+2. Set the "text/plain" file data via `data-clipboard-target` attribute on the button, along with the `data-clipboard-file` attribute. ClipAndFile will look for the target element via ID and try to get the text value via `.value`, `.textContent`, or `.innerText`, then save to a file of the specified name. 
+
+  ```html
+  <button id="my-button_text" data-clipboard-target="clipboard_text" data-clipboard-file="text.txt">Copy to Clipboard</button>
+  <button id="my-button_textarea" data-clipboard-target="clipboard_textarea" data-clipboard-file="textarea.txt">Copy to Clipboard</button>
+  <button id="my-button_pre" data-clipboard-target="clipboard_pre" data-clipboard-file="pre.txt">Copy to Clipboard</button>
+
+  <input type="text" id="clipboard_text" value="Clipboard Text"/>
+  <textarea id="clipboard_textarea">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</textarea>
+  <pre id="clipboard_pre">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+  consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</pre>
+  ```
+
+3. Set the file data via `data-clipboard-b64` or `data-clipboard-text` attributes on the button, along with the `data-clipboard-file` attribute. ClipAndFile will save the data to the specified file.
+
+  ```html
+  <button id="my-button" data-clipboard-text="Copy me!" data-clipboard-file="example.txt">Copy to Clipboard</button>
+  ```
+
+4. Set the data via the `ClipAndFile.setFile` (any segment) method.  You can call this function at any time: when the page first loads, or later like in a `copy` event handler.  Example:
+
+  ```js
+  ClipAndFile.setFile( "text/plain", "Save me!", "example.txt", false);
+  ```
+
+  The important caveat of using `ClipAndFile.setData` is that the data it sets is **transient** and _will only be used for a single save operation_. As such, we do not particularly
+  recommend using `ClipAndFile.setFile` (and friends) other than inside of a `copy` event handler; however, the API will not prevent you from using it in other ways.
 
 
 ### Clipping
@@ -175,7 +196,7 @@ You can pass in a reference to the actual DOM element object itself or an array 
 And the code:
 
 ```js
-var client = new ZeroClipboard( $("button#my-button") );
+var client = new ClipAndFile( $("button#my-button") );
 ```
 
 
@@ -183,7 +204,7 @@ var client = new ZeroClipboard( $("button#my-button") );
 
 Since the Flash movie is floating on top of your DOM element, it will receive all the mouse events before the browser has a chance to catch them.  However, for convenience, these events are passed through to your clipboard client which you can capture (see _Event Handlers_ below), so long as the `bubbleEvents` configuration property remains set to `true`.
 
-In addition to this, ZeroClipboard can also manage CSS classes on the clipped elements that mimic the CSS pseudo-classes ":hover" and ":active" on your DOM element.  This essentially allows your elements to behave normally, even though the floating Flash movie is the first object receiving all the mouse events during the event bubbling phase.  These "pseudo-pseudo-class" names are configurable via the `hoverClass` and `activeClass` configuration properties.
+In addition to this, ClipAndFile can also manage CSS classes on the clipped elements that mimic the CSS pseudo-classes ":hover" and ":active" on your DOM element.  This essentially allows your elements to behave normally, even though the floating Flash movie is the first object receiving all the mouse events during the event bubbling phase.  These "pseudo-pseudo-class" names are configurable via the `hoverClass` and `activeClass` configuration properties.
 
 Example CSS, targeting a DOM element with a class of "clip_button":
 
@@ -196,8 +217,8 @@ Example CSS, targeting a DOM element with a class of "clip_button":
     margin: 10px;
     padding: 10px;
   }
-  .clip_button.zeroclipboard-is-hover { background-color: #eee; }
-  .clip_button.zeroclipboard-is-active { background-color: #aaa; }
+  .clip_button.clipandfile-is-hover { background-color: #eee; }
+  .clip_button.clipandfile-is-active { background-color: #aaa; }
 ```
 
 
@@ -215,9 +236,9 @@ Here is a quick example using as few calls as possible:
   <body>
     <div id="d_clip_button" class="clip_button" data-clipboard-text="Copy Me!" title="Click to copy." style="border:1px solid black; padding:20px;">Copy To Clipboard</div>
 
-    <script type="text/javascript" src="ZeroClipboard.js"></script>
+    <script type="text/javascript" src="ClipAndFile.js"></script>
     <script type="text/javascript">
-      var client = new ZeroClipboard( document.getElementById('d_clip_button') );
+      var client = new ClipAndFile( document.getElementById('d_clip_button') );
     </script>
   </body>
 </html>
@@ -241,19 +262,19 @@ Here is a more complete example which exercises many of the configuration option
         margin: 10px;
         padding: 10px;
       }
-      .clip_button.zeroclipboard-is-hover { background-color: #eee; }
-      .clip_button.zeroclipboard-is-active { background-color: #aaa; }
+      .clip_button.clipandfile-is-hover { background-color: #eee; }
+      .clip_button.clipandfile-is-active { background-color: #aaa; }
     </style>
   </head>
   <body>
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script type="text/javascript" src="ZeroClipboard.js"></script>
+    <script type="text/javascript" src="ClipAndFile.js"></script>
 
     <div class="clip_button">Copy To Clipboard</div>
     <div class="clip_button">Copy This Too!</div>
 
     <script type="text/javascript">
-      var client = new ZeroClipboard( $('.clip_button') );
+      var client = new ClipAndFile( $('.clip_button') );
 
       client.on( 'ready', function(event) {
         // console.log( 'movie is loaded' );
@@ -268,8 +289,8 @@ Here is a more complete example which exercises many of the configuration option
       } );
 
       client.on( 'error', function(event) {
-        // console.log( 'ZeroClipboard error of type "' + event.name + '": ' + event.message );
-        ZeroClipboard.destroy();
+        // console.log( 'ClipAndFile error of type "' + event.name + '": ' + event.message );
+        ClipAndFile.destroy();
       } );
     </script>
   </body>
@@ -277,30 +298,30 @@ Here is a more complete example which exercises many of the configuration option
 ```
 
 
-## Namespacing ZeroClipboard
+## Namespacing ClipAndFile
 
-ZeroClipboard creates DOM elements with pre-configured attributes, e.g. a `div` element with an ID of `"global-zeroclipboard-html-bridge"` to encapsulate the Flash object.
+ClipAndFile creates DOM elements with pre-configured attributes, e.g. a `div` element with an ID of `"global-clipandfile-html-bridge"` to encapsulate the Flash object.
 
-If you have a need to change the default values, they can be configured by passing in values for `containerId`, `containerClass`, and/or `swfObjectId` using the `ZeroClipboard.config` method. Configuration of these values is completely optional. These values cannot be reconfigured while the ZeroClipboard SWF is actively embedded, and so are completely ignored during that time.
+If you have a need to change the default values, they can be configured by passing in values for `containerId`, `containerClass`, and/or `swfObjectId` using the `ClipAndFile.config` method. Configuration of these values is completely optional. These values cannot be reconfigured while the ClipAndFile SWF is actively embedded, and so are completely ignored during that time.
 
 Values for `containerId` and `swfObjectId` are validated against the [HTML4 spec for `ID` and `Name` tokens][valid_ids].
 
   
 ## AMD
 
-If using [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) with a library such as [RequireJS](http://requirejs.org/), etc., you shouldn't need to do any special configuration for ZeroClipboard to work correctly as an AMD module.
+If using [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) with a library such as [RequireJS](http://requirejs.org/), etc., you shouldn't need to do any special configuration for ClipAndFile to work correctly as an AMD module.
 
 
 ## CommonJS
 
-If using [CommonJS](http://wiki.commonjs.org/wiki/Modules/1.1) with a library such as [Browserify](http://browserify.org/), [Webmake](https://github.com/medikoo/modules-webmake), etc., you shouldn't need to do any special configuration for ZeroClipboard to work correctly as an CommonJS module.
+If using [CommonJS](http://wiki.commonjs.org/wiki/Modules/1.1) with a library such as [Browserify](http://browserify.org/), [Webmake](https://github.com/medikoo/modules-webmake), etc., you shouldn't need to do any special configuration for ClipAndFile to work correctly as an CommonJS module.
 
 
 ## Known Conflicts With Other Libraries
 
-### [IE freezes when clicking a ZeroClipboard clipped element within a Bootstrap Modal](https://github.com/zeroclipboard/zeroclipboard/issues/159).
+### [IE freezes when clicking a ClipAndFile clipped element within a Bootstrap Modal](https://github.com/clipandfile/clipandfile/issues/159).
  - **Cause:** Bootstrap's Modal has an `enforceFocus` function that tries to keep the focus on the modal.
-   However, since the ZeroClipboard container is an immediate child of the `body`, this enforcement conflicts. Note that
+   However, since the ClipAndFile container is an immediate child of the `body`, this enforcement conflicts. Note that
    this workaround actually _overrides_ a core Bootstrap Modal function, and as such must be kept in sync as this function
    changes in future versions of Bootstrap.
  - **Workaround:** _Targeted against [Bootstrap v3.x](https://github.com/twbs/bootstrap/blob/96a9e1bae06cb21f8cf72ec528b8e31b6ab27272/js/modal.js#L115-123)._
@@ -308,7 +329,7 @@ If using [CommonJS](http://wiki.commonjs.org/wiki/Modules/1.1) with a library su
 ```js
 if (/MSIE|Trident/.test(window.navigator.userAgent)) {
   (function($) {
-    var zcClass = ZeroClipboard.config('containerClass');
+    var zcClass = ClipAndFile.config('containerClass');
     var proto = $.fn.modal.Constructor.prototype;
     proto.enforceFocus = function() {
       $(document)
@@ -328,16 +349,16 @@ if (/MSIE|Trident/.test(window.navigator.userAgent)) {
 ```
 
 
-### [IE freezes when clicking a ZeroClipboard clipped element within a jQuery UI [Modal] Dialog](https://github.com/zeroclipboard/zeroclipboard/issues/159).
+### [IE freezes when clicking a ClipAndFile clipped element within a jQuery UI [Modal] Dialog](https://github.com/clipandfile/clipandfile/issues/159).
  - **Cause:** jQuery UI's Dialog (with `{ modal: true }` set) has a `_keepFocus` function that tries to keep the focus on the modal.
-   However, since the ZeroClipboard container is an immediate child of the `body`, this enforcement conflicts. Luckily, jQuery UI offers
+   However, since the ClipAndFile container is an immediate child of the `body`, this enforcement conflicts. Luckily, jQuery UI offers
    more natural extension points than Bootstrap, so the workaround is smaller and less likely to be broken in future versions.
  - **Workaround:** _Targeted against [jQuery UI v1.10.x](https://github.com/jquery/jquery-ui/blob/457b275880b63b05b16b7c9ee6c22f29f682ebc8/ui/jquery.ui.dialog.js#L695-703)._
 
 ```js
 if (/MSIE|Trident/.test(window.navigator.userAgent)) {
   (function($) {
-    var zcClass = ZeroClipboard.config('containerClass');
+    var zcClass = ClipAndFile.config('containerClass');
     $.widget( 'ui.dialog', $.ui.dialog, {
       _allowInteraction: function( event ) {
         return this._super(event) || $( event.target ).closest( zcClass ).length;
@@ -360,7 +381,7 @@ Should also work in IE7 if you provide a polyfill for the global `JSON` object, 
 
 ## OS Considerations
 
-Because ZeroClipboard will be interacting with your users' system clipboards, there are some special considerations
+Because ClipAndFile will be interacting with your users' system clipboards, there are some special considerations
 specific to the users' operating systems that you should be aware of. With this information, you can make informed
 decisions of how _your_ site should handle each of these situations.
 
