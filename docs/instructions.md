@@ -128,7 +128,7 @@ Saving a file can be done in 4 ways:
    ```js
    client.on( "copy", function (event) {
       var clipboard = event.clipboardData;
-      clipboard.setFile( "text/plain", "Save me!", "example.txt", false);
+      clipboard.setFile( "example.txt", "Save me!", false);
    });
    ```
 
@@ -163,10 +163,10 @@ Saving a file can be done in 4 ways:
 4. Set the data via the `ClipAndFile.setFile` (any segment) method.  You can call this function at any time: when the page first loads, or later like in a `copy` event handler.  Example:
 
   ```js
-  ClipAndFile.setFile( "text/plain", "Save me!", "example.txt", false);
+  ClipAndFile.setFile( "example.txt", "Save me!", false);
   ```
 
-  The important caveat of using `ClipAndFile.setData` is that the data it sets is **transient** and _will only be used for a single save operation_. As such, we do not particularly
+  The important caveat of using `ClipAndFile.setFile` is that the data it sets is **transient** and _will only be used for a single save operation_. As such, we do not particularly
   recommend using `ClipAndFile.setFile` (and friends) other than inside of a `copy` event handler; however, the API will not prevent you from using it in other ways.
 
 
