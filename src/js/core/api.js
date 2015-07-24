@@ -150,7 +150,7 @@ ClipAndFile.setData = function(/* format, data */) {
  *
  * @returns `this`
  */
-ClipAndFile.prototype.setFile = function(/* filename, data, isBase64 */) {
+ClipAndFile.setFile = function(/* filename, data, isBase64 */) {
   return _setFile.apply(this, _args(arguments));
 };
 

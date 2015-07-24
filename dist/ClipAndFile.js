@@ -1765,7 +1765,7 @@
  *
  * @returns `this`
  */
-  ClipAndFile.prototype.setFile = function() {
+  ClipAndFile.setFile = function() {
     return _setFile.apply(this, _args(arguments));
   };
   /**
